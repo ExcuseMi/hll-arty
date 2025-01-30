@@ -560,7 +560,11 @@
         saveSettings();
     });
 
-
+    document.getElementById('britishFaction').addEventListener('click', () => {
+        currentFaction = 'british';
+        updateFactionUI('british');
+        saveSettings();
+    });
     // Speak function with fallback
     function speak(text) {
         if (!audioSettings.enabled) return;
