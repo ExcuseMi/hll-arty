@@ -2,10 +2,10 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>HLL Range Calculator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
-	<script src="https://code.responsivevoice.org/responsivevoice.js?key=7V8JRrYm"></script>
+    <script src="https://code.responsivevoice.org/responsivevoice.js?key=7V8JRrYm"></script>
     <style>
         body {
             font-family: system-ui, -apple-system, sans-serif;
@@ -29,7 +29,7 @@
         }
         .faction-selector {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 10px;
             margin: 15px 0;
         }
@@ -38,10 +38,16 @@
             padding: 15px;
             border-radius: 4px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+        .faction-group:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
         .faction-group.active {
             background: #4CAF50;
+            border-color: #45a049;
         }
         .faction-group h3 {
             margin: 0 0 10px 0;
@@ -51,32 +57,33 @@
             color: #ccc;
         }
         .conversion {
-            font-size: 24px;
-            padding: 20px;
-            margin: 10px 0;
-            border-radius: 4px;
-            background: #555;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 25px;
+            margin: 20px 0;
+            background: linear-gradient(145deg, #4CAF50, #45a049);
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+            border-radius: 8px;
             text-align: center;
         }
-		.control-button {
-			background: #4CAF50;
-			color: white;
-			border: none;
-			padding: 10px 20px;
-			border-radius: 4px;
-			cursor: pointer;
-			margin: 5px;
-			transition: background 0.3s;
-		}
-
-		.control-button:disabled {
-			background: #777;
-			cursor: not-allowed;
-		}
-
-		.control-button.active {
-			background: #45a049;
-		}
+        .control-button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background 0.3s;
+        }
+        .control-button:disabled {
+            background: #777;
+            cursor: not-allowed;
+        }
+        .control-button.active {
+            background: #45a049;
+        }
         .history {
             margin-top: 20px;
             background: #333;
@@ -112,9 +119,9 @@
             border-radius: 4px;
             margin-top: 20px;
         }
-		input[type="number"] {
+        input[type="number"] {
             flex: 1;
-            padding: 10px;
+            padding: 12px;
             border: 1px solid #444;
             border-radius: 4px;
             background: #333;
@@ -123,7 +130,6 @@
             -webkit-appearance: none;
             -moz-appearance: textfield;
         }
-
         input[type="number"]::-webkit-inner-spin-button,
         input[type="number"]::-webkit-outer-spin-button {
             -webkit-appearance: none;
@@ -136,613 +142,531 @@
             border-radius: 4px;
             text-align: center;
         }
-
         .input-group {
             display: flex;
             gap: 10px;
             width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
+            max-width: 600px;
+            margin: 20px auto;
         }
-
         .voice-info {
             background: #444;
             padding: 15px;
             border-radius: 4px;
             margin: 20px 0;
         }
-
         .voice-info h3 {
             color: #4CAF50;
             margin-bottom: 10px;
         }
-
         .browser-support {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 10px;
             margin-top: 10px;
         }
-
         .browser-item {
             background: #333;
             padding: 10px;
             border-radius: 4px;
             text-align: center;
         }
-
         .supported {
             color: #4CAF50;
         }
-
         .unsupported {
             color: #ff4444;
         }
-
-       .settings-panel {
+        .settings-panel {
             background: #333;
             padding: 20px;
             border-radius: 4px;
             margin-top: 20px;
         }
-
         .settings-group {
             margin: 15px 0;
         }
-
         .settings-group label {
             display: block;
             margin-bottom: 5px;
             color: #ccc;
         }
-
         .settings-row {
             display: flex;
             gap: 15px;
             flex-wrap: wrap;
         }
-
         .slider-container {
             flex: 1;
             min-width: 200px;
         }
-
         .slider-value {
             display: inline-block;
             width: 40px;
             text-align: right;
         }
-	</style>
+    </style>
 </head>
 <body>
-    <div class="container">
-        <div class="calculator">
-            <h1>Hell Let Loose Artillery Calculator</h1>
-            
-			<div class="control-panel">
-				<button id="startBtn" class="control-button">Start Voice</button>
-				<button id="stopBtn" class="control-button" disabled>Stop Voice</button>
-				<button id="clearHistoryBtn" class="control-button">Clear History</button>
-			</div>
-			<div class="status" id="status">Status: Not listening</div>
+<div class="container">
+    <div class="calculator">
+        <h1>Hell Let Loose Artillery Calculator</h1>
 
+        <div class="control-panel">
+            <button class="control-button" id="startBtn">Start Voice</button>
+            <button class="control-button" disabled id="stopBtn">Stop Voice</button>
+            <button class="control-button" id="clearHistoryBtn">Clear History</button>
+        </div>
+        <div class="status" id="status">Status: Not listening</div>
 
-
-            
-            
-            <div class="faction-selector">
-                <div class="faction-group active" id="standardFaction">
-                    <h3>Standard Forces</h3>
-                    <div class="faction-list">
-                        • US Forces<br>
-                        • UK/Commonwealth<br>
-                        • German Forces
-                    </div>
-                </div>
-                <div class="faction-group" id="russianFaction">
-                    <h3>Russian Forces</h3>
-                    <div class="faction-list">
-                        • Different artillery calculation<br>
-                        • Specific elevation formula
-                    </div>
+        <div class="faction-selector">
+            <div class="faction-group active" id="standardFaction">
+                <h3>Standard Forces</h3>
+                <div class="faction-list">
+                    • US Forces<br>
+                    • German Forces
                 </div>
             </div>
-
-            <div class="input-section">
-                <h3>Enter Distance</h3>
-                <div class="input-group">
-                    <input type="number" id="metersInput" placeholder="Enter distance in meters" min="0" max="9999">
-                    <button id="calculateBtn">Calculate</button>
+            <div class="faction-group" id="russianFaction">
+                <h3>Russian Forces</h3>
+                <div class="faction-list">
+                    • Different artillery calculation<br>
+                    • Specific elevation formula
                 </div>
             </div>
-            
-            <div class="conversion" id="conversion">Waiting for input...</div>
-            
-            <div class="history">
-                <h3>Calculation History</h3>
-                <div id="historyList"></div>
-            </div>
-			<div class="settings-panel">
-				<h3>Audio Settings</h3>
-				<div class="settings-group">
-					<label>
-						<input type="checkbox" id="audioEnabled"> Audio Enabled
-					</label>
-				</div>
-				
-				<div class="settings-row">
-					<div class="settings-group">
-						<label>Voice:</label>
-						<select id="voiceSelect"></select>
-					</div>
-					
-					<div class="settings-group slider-container">
-						<label>Volume: <span class="slider-value" id="volumeValue">100</span>%</label>
-						<input type="range" id="volumeSlider" min="0" max="100" value="100">
-					</div>
-
-					<div class="settings-group slider-container">
-						<label>Speed: <span class="slider-value" id="rateValue">1.0</span></label>
-						<input type="range" id="rateSlider" min="0.5" max="2" step="0.1" value="1">
-					</div>
-
-					<div class="settings-group slider-container">
-						<label>Pitch: <span class="slider-value" id="pitchValue">1.0</span></label>
-						<input type="range" id="pitchSlider" min="0" max="2" step="0.1" value="1">
-					</div>
-				</div>
-			</div>
-            <div class="voice-info">
-                <h3>Voice Recognition Information</h3>
-                <p>Voice commands work in the background even when alt-tabbed.</p>
-                
-                <div class="browser-support">
-                    <div class="browser-item">
-                        <strong>Chrome</strong><br>
-                        <span class="supported">✓ Fully Supported</span>
-                    </div>
-                    <div class="browser-item">
-                        <strong>Edge</strong><br>
-                        <span class="supported">✓ Fully Supported</span>
-                    </div>
-                    <div class="browser-item">
-                        <strong>Safari</strong><br>
-                        <span class="unsupported">✗ Limited Support</span>
-                    </div>
-                    <div class="browser-item">
-                        <strong>Firefox</strong><br>
-                        <span class="unsupported">✗ Not Supported</span>
-                    </div>
-                </div>
-
-                <div class="commands">
-                    <h3>Voice Commands:</h3>
-                    <p>1. Set faction: "<strong>faction russian / russian forces</strong>" or "<strong>faction standard / standard forces</strong>"</p>
-                    <p>2. Calculate: Say a number followed by "meters" (e.g., "<strong>400 (meters)</strong>"). Saying four zero zero works as well.</p>
-                    <p><strong>Note:</strong> For best results, use Chrome or Edge with a clear microphone</p>
+            <div class="faction-group" id="britishFaction">
+                <h3>British Forces</h3>
+                <div class="faction-list">
+                    • QF 25-pounder gun<br>
+                    • Specific calculation
                 </div>
             </div>
-            
+        </div>
+
+        <div class="input-section">
+            <h3>Enter Distance</h3>
+            <div class="input-group">
+                <input id="metersInput" max="9999" min="0" placeholder="Enter distance in meters" type="number">
+                <button id="calculateBtn">Calculate</button>
+            </div>
+        </div>
+
+        <div class="conversion" id="conversion">Waiting for input...</div>
+
+        <div class="history">
+            <h3>Calculation History</h3>
+            <div id="historyList"></div>
+        </div>
+
+        <div class="settings-panel">
+            <h3>Audio Settings</h3>
+            <div class="settings-group">
+                <label>
+                    <input id="audioEnabled" type="checkbox"> Audio Enabled
+                </label>
+            </div>
+            <div class="settings-row">
+                <div class="settings-group">
+                    <label>Voice:</label>
+                    <select id="voiceSelect"></select>
+                </div>
+                <div class="settings-group slider-container">
+                    <label>Volume: <span class="slider-value" id="volumeValue">100</span>%</label>
+                    <input id="volumeSlider" max="100" min="0" type="range" value="100">
+                </div>
+                <div class="settings-group slider-container">
+                    <label>Speed: <span class="slider-value" id="rateValue">1.0</span></label>
+                    <input id="rateSlider" max="2" min="0.5" step="0.1" type="range" value="1">
+                </div>
+                <div class="settings-group slider-container">
+                    <label>Pitch: <span class="slider-value" id="pitchValue">1.0</span></label>
+                    <input id="pitchSlider" max="2" min="0" step="0.1" type="range" value="1">
+                </div>
+            </div>
+        </div>
+
+        <div class="voice-info">
+            <h3>Voice Recognition Information</h3>
+            <p>Voice commands work in the background even when alt-tabbed.</p>
+            <div class="browser-support">
+                <div class="browser-item">
+                    <strong>Chrome</strong><br>
+                    <span class="supported">✓ Fully Supported</span>
+                </div>
+                <div class="browser-item">
+                    <strong>Edge</strong><br>
+                    <span class="supported">✓ Fully Supported</span>
+                </div>
+                <div class="browser-item">
+                    <strong>Safari</strong><br>
+                    <span class="unsupported">✗ Limited Support</span>
+                </div>
+                <div class="browser-item">
+                    <strong>Firefox</strong><br>
+                    <span class="unsupported">✗ Not Supported</span>
+                </div>
+            </div>
+            <div class="commands">
+                <h3>Voice Commands:</h3>
+                <p>1. Set faction: "<strong>faction russian / russian forces</strong>", "<strong>faction british / british forces</strong>", or "<strong>faction standard / standard forces</strong>"</p>
+                <p>2. Calculate: Say a number followed by "meters" (e.g., "<strong>400 (meters)</strong>"). Saying four zero zero works as well.</p>
+                <p><strong>Note:</strong> For best results, use Chrome or Edge with a clear microphone</p>
+            </div>
         </div>
     </div>
+</div>
 
-    <script>
-let currentFaction = 'standard';
-let calculationHistory = [];
-let micPermissionGranted = false;
+<script>
+    let currentFaction = 'standard';
+    let calculationHistory = [];
+    let micPermissionGranted = false;
 
-// Audio settings object
-const audioSettings = {
-	enabled: true,
-	voice: 'UK English Female',
-	volume: 1,
-	rate: 1,
-	pitch: 1
-};
-
-// Available ResponsiveVoice voices
-const rvVoices = [
-	'UK English Female',
-	'UK English Male',
-	'US English Female',
-	'US English Male',
-	'Australian Female'
-];
-
-// Initialize settings
-function initSettings() {
-	// Load from localStorage
-	const savedSettings = localStorage.getItem('audioSettings');
-	if (savedSettings) {
-		Object.assign(audioSettings, JSON.parse(savedSettings));
-	}
-
-	// Set UI elements
-	document.getElementById('audioEnabled').checked = audioSettings.enabled;
-	document.getElementById('volumeSlider').value = audioSettings.volume * 100;
-	document.getElementById('rateSlider').value = audioSettings.rate;
-	document.getElementById('pitchSlider').value = audioSettings.pitch;
-	updateSliderValues();
-
-	// Populate voice select
-	const voiceSelect = document.getElementById('voiceSelect');
-	rvVoices.forEach(voice => {
-		const option = document.createElement('option');
-		option.value = voice;
-		option.textContent = voice;
-		voiceSelect.appendChild(option);
-	});
-	voiceSelect.value = audioSettings.voice;
-
-	// Initialize Web Speech voices
-	//initWebSpeechVoices();
-}
-
-// Initialize Web Speech API voices
-function initWebSpeechVoices() {
-	if ('speechSynthesis' in window) {
-		speechSynthesis.onvoiceschanged = () => {
-			const voices = speechSynthesis.getVoices();
-			const voiceSelect = document.getElementById('voiceSelect');
-			
-			voices.filter(v => v.lang.startsWith('en-')).forEach(voice => {
-			    console.log(voice.name);
-				const option = document.createElement('option');
-				option.value = voice.name;
-				option.textContent = `${voice.name} (${voice.lang})`;
-				voiceSelect.appendChild(option);
-			});
-		};
-	}
-}
-
-
-// Update slider display values
-function updateSliderValues() {
-	document.getElementById('volumeValue').textContent = 
-		Math.round(document.getElementById('volumeSlider').value);
-	document.getElementById('rateValue').textContent = 
-		document.getElementById('rateSlider').value;
-	document.getElementById('pitchValue').textContent = 
-		document.getElementById('pitchSlider').value;
-        }
-
-// Standard conversion for US, UK, and German forces
-const standardConversion = (meters) => {
-	const A = 1001.465;
-	const B = -0.2371;
-	return Math.round(A + (B * meters));
-};
-
-// Russian conversion
-const russianConversion = (meters) => {
-	const A = 1120;
-	const B = 21.33;
-	const L = 100;
-	return Math.round(A - (((meters / L) - 1) * B));
-};
-// Load settings and history from localStorage
-function loadSettings() {
-    const savedFaction = localStorage.getItem('currentFaction');
-    const savedAudioEnabled = localStorage.getItem('audioEnabled');
-    const savedHistory = localStorage.getItem('calculationHistory');
-
-    if (savedFaction) currentFaction = savedFaction;
-    if (savedAudioEnabled) audioEnabled = JSON.parse(savedAudioEnabled);
-    if (savedHistory) calculationHistory = JSON.parse(savedHistory);
-
-    updateFactionUI(currentFaction);
-    updateHistoryUI();
-}
-
-// Save settings and history to localStorage
-function saveSettings() {
-    localStorage.setItem('currentFaction', currentFaction);
-    localStorage.setItem('audioEnabled', JSON.stringify(audioEnabled));
-    localStorage.setItem('calculationHistory', JSON.stringify(calculationHistory));
-	
-	audioSettings.enabled = document.getElementById('audioEnabled').checked;
-	audioSettings.voice = document.getElementById('voiceSelect').value;
-	audioSettings.volume = parseFloat(document.getElementById('volumeSlider').value) / 100;
-	audioSettings.rate = parseFloat(document.getElementById('rateSlider').value);
-	audioSettings.pitch = parseFloat(document.getElementById('pitchSlider').value);
-	
-	localStorage.setItem('audioSettings', JSON.stringify(audioSettings));
-
-}
-
-// Clear history
-function clearHistory() {
-    calculationHistory = [];
-    updateHistoryUI();
-    saveSettings();
-}
-
-// Update faction UI
-function updateFactionUI(faction) {
-    document.getElementById('standardFaction').classList.remove('active');
-    document.getElementById('russianFaction').classList.remove('active');
-    if (faction === 'standard') {
-        document.getElementById('standardFaction').classList.add('active');
-    } else {
-        document.getElementById('russianFaction').classList.add('active');
-    }
-}
-
-// Add to history
-function addToHistory(meters, mils, faction) {
-    calculationHistory.unshift({
-        meters,
-        mils,
-        faction,
-        timestamp: new Date().toLocaleTimeString()
-    });
-    if (calculationHistory.length > 10) calculationHistory.pop();
-    updateHistoryUI();
-    saveSettings();
-}
-
-// Update history UI
-function updateHistoryUI() {
-    const historyHTML = calculationHistory.map(item => `
-        <div class="history-item">
-            <span>${item.timestamp} - ${item.faction}</span>
-            <span>${item.meters}m = ${item.mils} mils</span>
-        </div>
-    `).join('');
-    document.getElementById('historyList').innerHTML = historyHTML;
-}
-
-// Calculate mils
-function calculateMils(meters) {
-    if (isNaN(meters) || meters < 0) return null;
-
-    let mils;
-    if (currentFaction === 'russian') {
-        mils = russianConversion(meters);
-    } else {
-        mils = standardConversion(meters);
-    }
-
-    document.getElementById('conversion').textContent = `${meters} meters = ${mils} mils`;
-    addToHistory(meters, mils, currentFaction);
-
-    if ('speechSynthesis' in window) {
-        speak(`${mils} mils`);
-    }
-
-    return mils;
-}
-
-// Request microphone permission
-async function requestMicrophonePermission() {
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        micPermissionGranted = true;
-        stream.getTracks().forEach(track => track.stop());
-        return true;
-    } catch (err) {
-        console.error('Microphone permission denied:', err);
-        document.getElementById('status').textContent = 'Status: Microphone access denied';
-        document.getElementById('startBtn').disabled = true;
-        return false;
-    }
-}
-
-// Update button states
-function updateButtonStates(isListening) {
-    document.getElementById('startBtn').disabled = isListening;
-    document.getElementById('stopBtn').disabled = !isListening;
-}
-
-// Setup keyboard input
-document.getElementById('calculateBtn').addEventListener('click', () => {
-    const meters = parseInt(document.getElementById('metersInput').value);
-    calculateMils(meters);
-});
-
-document.getElementById('metersInput').addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
-        const meters = parseInt(e.target.value);
-        calculateMils(meters);
-    }
-});
-
-// Faction selection
-document.getElementById('standardFaction').addEventListener('click', () => {
-    currentFaction = 'standard';
-    updateFactionUI('standard');
-    saveSettings();
-});
-
-document.getElementById('russianFaction').addEventListener('click', () => {
-    currentFaction = 'russian';
-    updateFactionUI('russian');
-    saveSettings();
-});
-
-
-// Speak function with fallback
-function speak(text) {
-	if (!audioSettings.enabled) return;
-
-	try {
-		// Try ResponsiveVoice first
-		if (typeof responsiveVoice !== 'undefined') {
-			responsiveVoice.speak(text, audioSettings.voice, {
-				volume: audioSettings.volume,
-				rate: audioSettings.rate,
-				pitch: audioSettings.pitch
-			});
-		} 
-		// Fallback to Web Speech API
-		else if ('speechSynthesis' in window) {
-			const utterance = new SpeechSynthesisUtterance(text);			
-			utterance.volume = audioSettings.volume;
-			utterance.rate = audioSettings.rate;
-			utterance.pitch = audioSettings.pitch;
-			
-			speechSynthesis.speak(utterance);
-		}
-	} catch (e) {
-		console.error('Speech error:', e);
-	}
-}
-
-
-
-// Clear history button
-document.getElementById('clearHistoryBtn').addEventListener('click', () => {
-    clearHistory();
-});
-
-// Voice recognition setup
-if (annyang) {
-    const commands = {
-        'faction *team': function(team) {
-            const teamLower = team.toLowerCase();
-            if (teamLower === 'russian') {
-                currentFaction = 'russian';
-                updateFactionUI('russian');
-                if (audioEnabled) {
-                    speak('Russian forces selected');
-                }
-            } else if (teamLower === 'standard' || ['us', 'uk', 'german', 'axis'].includes(teamLower)) {
-                currentFaction = 'standard';
-                updateFactionUI('standard');
-                if (audioEnabled) {
-                    speak('Standard forces selected');
-                }
-            }
-            saveSettings();
-        },
-		'*team forces': function(team) {
-            const teamLower = team.toLowerCase();
-            if (teamLower === 'russian') {
-                currentFaction = 'russian';
-                updateFactionUI('russian');
-                if (audioEnabled) {
-                    speak('Russian forces selected');
-                }
-            } else if (teamLower === 'standard' || ['us', 'uk', 'german', 'axis'].includes(teamLower)) {
-                currentFaction = 'standard';
-                updateFactionUI('standard');
-                if (audioEnabled) {
-                    speak('Standard forces selected');
-                }
-            }
-            saveSettings();
-        },
-        ':number meter': function(number) {
-            const meters = parseInt(number);
-            calculateMils(meters);
-        },
-		':number meters': function(number) {
-            const meters = parseInt(number);
-            calculateMils(meters);
-        },
-        ':number': function(number) {
-            const meters = parseInt(number);
-            calculateMils(meters);
-        }
+    const audioSettings = {
+        enabled: true,
+        voice: 'UK English Female',
+        volume: 1,
+        rate: 1,
+        pitch: 1
     };
 
-    annyang.addCommands(commands);
+    const rvVoices = [
+        'UK English Female',
+        'UK English Male',
+        'US English Female',
+        'US English Male',
+        'Australian Female'
+    ];
 
-	document.getElementById('startBtn').addEventListener('click', async () => {
-		if (!micPermissionGranted) {
-			const permitted = await requestMicrophonePermission();
-			if (!permitted) {
-				console.error('Microphone permission is not granted.');
-				return;
-			}
-		}
-		
-		annyang.start({ autoRestart: true, continuous: true });
-		document.getElementById('status').textContent = 'Status: Listening';
-		updateButtonStates(true);
-	});
-
-    // Stop button handler
-    document.getElementById('stopBtn').addEventListener('click', () => {
-        annyang.abort();
-        document.getElementById('status').textContent = 'Status: Not listening';
-        updateButtonStates(false);
-    });
-	document.getElementById('audioEnabled').addEventListener('change', saveSettings);
-	document.getElementById('voiceSelect').addEventListener('change', saveSettings);
-	document.getElementById('volumeSlider').addEventListener('input', () => {
-		updateSliderValues();
-		saveSettings();
-	});
-	document.getElementById('rateSlider').addEventListener('input', () => {
-		updateSliderValues();
-		saveSettings();
-	});
-	document.getElementById('pitchSlider').addEventListener('input', () => {
-		updateSliderValues();
-		saveSettings();
-	});
-    // Error handling
-    annyang.addCallback('error', function(err) {
-        console.error('Annyang error:', err);
-        if (err.error === 'network') {
-            document.getElementById('status').textContent = 'Status: Network error - check connection';
-        } else if (err.error === 'audio') {
-            document.getElementById('status').textContent = 'Status: Audio error - check microphone';
-            micPermissionGranted = false;
-        } else if (err.error === 'aborted') {
-            document.getElementById('status').textContent = 'Status: Recognition stopped';
-            updateButtonStates(false);
-            return;
-        } else {
-            document.getElementById('status').textContent = 'Status: Error occurred';
+    function initSettings() {
+        const savedSettings = localStorage.getItem('audioSettings');
+        if (savedSettings) {
+            Object.assign(audioSettings, JSON.parse(savedSettings));
         }
-        updateButtonStates(false);
-    });
 
-    // Handle successful start
-    annyang.addCallback('start', function() {
-        micPermissionGranted = true;
-        document.getElementById('status').textContent = 'Status: Listening';
-        updateButtonStates(true);
-    });
-} else {
-    document.getElementById('startBtn').disabled = true;
-    document.getElementById('stopBtn').disabled = true;
-    document.getElementById('status').textContent = 'Voice recognition not available';
-}
-// Initialize on load
-initSettings();
+        document.getElementById('audioEnabled').checked = audioSettings.enabled;
+        document.getElementById('volumeSlider').value = audioSettings.volume * 100;
+        document.getElementById('rateSlider').value = audioSettings.rate;
+        document.getElementById('pitchSlider').value = audioSettings.pitch;
+        updateSliderValues();
 
-// Set initial button states
-updateButtonStates(false);
+        const voiceSelect = document.getElementById('voiceSelect');
+        rvVoices.forEach(voice => {
+            const option = document.createElement('option');
+            option.value = voice;
+            option.textContent = voice;
+            voiceSelect.appendChild(option);
+        });
+        voiceSelect.value = audioSettings.voice;
+    }
 
-// Load settings on page load
-loadSettings();
+    function updateSliderValues() {
+        document.getElementById('volumeValue').textContent =
+            Math.round(document.getElementById('volumeSlider').value);
+        document.getElementById('rateValue').textContent =
+            document.getElementById('rateSlider').value;
+        document.getElementById('pitchValue').textContent =
+            document.getElementById('pitchSlider').value;
+    }
 
-// Handle page visibility changes
-document.addEventListener('visibilitychange', function() {
-    if (document.hidden) {
-        if (annyang && annyang.isListening()) {
-            document.getElementById('status').textContent = 'Status: Running in background';
-        }
-    } else {
-        if (annyang && annyang.isListening()) {
-            document.getElementById('status').textContent = 'Status: Listening';
-            updateButtonStates(true);
+    const standardConversion = (meters) => {
+        const A = 1001.465;
+        const B = -0.2371;
+        return Math.round(A + (B * meters));
+    };
+
+    const russianConversion = (meters) => {
+        const A = 1120;
+        const B = 21.33;
+        const L = 100;
+        return Math.round(A - (((meters / L) - 1) * B));
+    };
+
+    const britishConversion = (meters) => {
+        const m = -0.1773;
+        const b = 550.69;
+        return Math.round(m * meters + b);
+    };
+
+    function calculateMils(meters) {
+        if (isNaN(meters) || meters < 0) return null;
+
+        let mils;
+        if (currentFaction === 'russian') {
+            mils = russianConversion(meters);
+        } else if (currentFaction === 'british') {
+            mils = britishConversion(meters);
         } else {
-            document.getElementById('status').textContent = 'Status: Not listening';
-            updateButtonStates(false);
+            mils = standardConversion(meters);
+        }
+
+        document.getElementById('conversion').textContent = `${meters} meters = ${mils} mils`;
+        addToHistory(meters, mils, currentFaction);
+        speakMils(mils);
+        return mils;
+    }
+
+    function speakMils(mils) {
+        if (!audioSettings.enabled) return;
+
+        const digits = String(mils).split('');
+        const digitWords = {
+            '0': 'zero',
+            '1': 'one',
+            '2': 'two',
+            '3': 'three',
+            '4': 'four',
+            '5': 'five',
+            '6': 'six',
+            '7': 'seven',
+            '8': 'eight',
+            '9': 'nine'
+        };
+
+        const spokenDigits = digits.map(d => digitWords[d]).join(' ');
+        const text = `${spokenDigits} mils`;
+
+        try {
+            if (typeof responsiveVoice !== 'undefined') {
+                responsiveVoice.speak(text, audioSettings.voice, {
+                    volume: audioSettings.volume,
+                    rate: audioSettings.rate,
+                    pitch: audioSettings.pitch
+                });
+            }
+        } catch (e) {
+            console.error('Speech error:', e);
         }
     }
-});
-	
 
-// Only request notification permission once
-if ('Notification' in window && Notification.permission === 'default') {
-	Notification.requestPermission();
-}
-    </script>
+    // Request microphone permission
+    async function requestMicrophonePermission() {
+        try {
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            micPermissionGranted = true;
+            stream.getTracks().forEach(track => track.stop());
+            return true;
+        } catch (err) {
+            console.error('Microphone permission denied:', err);
+            document.getElementById('status').textContent = 'Status: Microphone access denied';
+            document.getElementById('startBtn').disabled = true;
+            return false;
+        }
+    }
+
+    // Update button states
+    function updateButtonStates(isListening) {
+        document.getElementById('startBtn').disabled = isListening;
+        document.getElementById('stopBtn').disabled = !isListening;
+    }
+
+    // Setup keyboard input
+    document.getElementById('calculateBtn').addEventListener('click', () => {
+        const meters = parseInt(document.getElementById('metersInput').value);
+        calculateMils(meters);
+    });
+
+    document.getElementById('metersInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            const meters = parseInt(e.target.value);
+            calculateMils(meters);
+        }
+    });
+
+    // Faction selection
+    document.getElementById('standardFaction').addEventListener('click', () => {
+        currentFaction = 'standard';
+        updateFactionUI('standard');
+        saveSettings();
+    });
+
+    document.getElementById('russianFaction').addEventListener('click', () => {
+        currentFaction = 'russian';
+        updateFactionUI('russian');
+        saveSettings();
+    });
+
+
+    // Speak function with fallback
+    function speak(text) {
+        if (!audioSettings.enabled) return;
+
+        try {
+            // Try ResponsiveVoice first
+            if (typeof responsiveVoice !== 'undefined') {
+                responsiveVoice.speak(text, audioSettings.voice, {
+                    volume: audioSettings.volume,
+                    rate: audioSettings.rate,
+                    pitch: audioSettings.pitch
+                });
+            }
+            // Fallback to Web Speech API
+            else if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.volume = audioSettings.volume;
+                utterance.rate = audioSettings.rate;
+                utterance.pitch = audioSettings.pitch;
+
+                speechSynthesis.speak(utterance);
+            }
+        } catch (e) {
+            console.error('Speech error:', e);
+        }
+    }
+
+
+
+    // Clear history button
+    document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+        clearHistory();
+    });
+
+    // Voice recognition setup
+    if (annyang) {
+        const commands = {
+            'faction *team': function(team) {
+                const teamLower = team.toLowerCase();
+                if (teamLower === 'russian') {
+                    currentFaction = 'russian';
+                    updateFactionUI('russian');
+                    if (audioEnabled) {
+                        speak('Russian forces selected');
+                    }
+                } else if (teamLower === 'standard' || ['us', 'uk', 'german', 'axis'].includes(teamLower)) {
+                    currentFaction = 'standard';
+                    updateFactionUI('standard');
+                    if (audioEnabled) {
+                        speak('Standard forces selected');
+                    }
+                }
+                saveSettings();
+            },
+            '*team forces': function(team) {
+                const teamLower = team.toLowerCase();
+                if (teamLower === 'russian') {
+                    currentFaction = 'russian';
+                    updateFactionUI('russian');
+                    if (audioEnabled) {
+                        speak('Russian forces selected');
+                    }
+                } else if (teamLower === 'standard' || ['us', 'uk', 'german', 'axis'].includes(teamLower)) {
+                    currentFaction = 'standard';
+                    updateFactionUI('standard');
+                    if (audioEnabled) {
+                        speak('Standard forces selected');
+                    }
+                }
+                saveSettings();
+            },
+            ':number meter': function(number) {
+                const meters = parseInt(number);
+                calculateMils(meters);
+            },
+            ':number meters': function(number) {
+                const meters = parseInt(number);
+                calculateMils(meters);
+            },
+            ':number': function(number) {
+                const meters = parseInt(number);
+                calculateMils(meters);
+            }
+        };
+
+        annyang.addCommands(commands);
+
+        document.getElementById('startBtn').addEventListener('click', async () => {
+            if (!micPermissionGranted) {
+                const permitted = await requestMicrophonePermission();
+                if (!permitted) {
+                    console.error('Microphone permission is not granted.');
+                    return;
+                }
+            }
+
+            annyang.start({ autoRestart: true, continuous: true });
+            document.getElementById('status').textContent = 'Status: Listening';
+            updateButtonStates(true);
+        });
+
+        // Stop button handler
+        document.getElementById('stopBtn').addEventListener('click', () => {
+            annyang.abort();
+            document.getElementById('status').textContent = 'Status: Not listening';
+            updateButtonStates(false);
+        });
+        document.getElementById('audioEnabled').addEventListener('change', saveSettings);
+        document.getElementById('voiceSelect').addEventListener('change', saveSettings);
+        document.getElementById('volumeSlider').addEventListener('input', () => {
+            updateSliderValues();
+            saveSettings();
+        });
+        document.getElementById('rateSlider').addEventListener('input', () => {
+            updateSliderValues();
+            saveSettings();
+        });
+        document.getElementById('pitchSlider').addEventListener('input', () => {
+            updateSliderValues();
+            saveSettings();
+        });
+        // Error handling
+        annyang.addCallback('error', function(err) {
+            console.error('Annyang error:', err);
+            if (err.error === 'network') {
+                document.getElementById('status').textContent = 'Status: Network error - check connection';
+            } else if (err.error === 'audio') {
+                document.getElementById('status').textContent = 'Status: Audio error - check microphone';
+                micPermissionGranted = false;
+            } else if (err.error === 'aborted') {
+                document.getElementById('status').textContent = 'Status: Recognition stopped';
+                updateButtonStates(false);
+                return;
+            } else {
+                document.getElementById('status').textContent = 'Status: Error occurred';
+            }
+            updateButtonStates(false);
+        });
+
+        // Handle successful start
+        annyang.addCallback('start', function() {
+            micPermissionGranted = true;
+            document.getElementById('status').textContent = 'Status: Listening';
+            updateButtonStates(true);
+        });
+    } else {
+        document.getElementById('startBtn').disabled = true;
+        document.getElementById('stopBtn').disabled = true;
+        document.getElementById('status').textContent = 'Voice recognition not available';
+    }
+    // Initialize on load
+    initSettings();
+
+    // Set initial button states
+    updateButtonStates(false);
+
+    // Load settings on page load
+    loadSettings();
+
+    // Handle page visibility changes
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) {
+            if (annyang && annyang.isListening()) {
+                document.getElementById('status').textContent = 'Status: Running in background';
+            }
+        } else {
+            if (annyang && annyang.isListening()) {
+                document.getElementById('status').textContent = 'Status: Listening';
+                updateButtonStates(true);
+            } else {
+                document.getElementById('status').textContent = 'Status: Not listening';
+                updateButtonStates(false);
+            }
+        }
+    });
+
+
+    // Only request notification permission once
+    if ('Notification' in window && Notification.permission === 'default') {
+        Notification.requestPermission();
+    }
+</script>
 </body>
 </html>
