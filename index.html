@@ -804,7 +804,7 @@
     if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission().then(permission => {
                 if (permission === 'granted') {
-                    document.getElementById('enableNotificationsBtn').hide = True
+                    document.getElementById('enableNotificationsBtn').style.visibility = 'hidden';
                 } else {
                     alert('Notifications permission denied. You can enable it later in your browser settings.');
                 }
