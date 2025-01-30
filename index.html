@@ -684,7 +684,9 @@
             }
         };
         annyang.addCommands(commands);
-
+        annyang.addCallback('result', function(phrases) {
+            console.log('Recognized phrases:', phrases);
+        });
         document.getElementById('startBtn').addEventListener('click', async () => {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
