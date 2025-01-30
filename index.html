@@ -227,36 +227,101 @@
             transform: rotate(-90deg);
         }
 
+        /* Updated select dropdown styles */
         .voice-select-wrapper {
             position: relative;
             background: #444;
             border-radius: 4px;
             padding: 8px;
-        }
-
-        .voice-select-wrapper::after {
-            content: '▼';
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            pointer-events: none;
-            color: #ccc;
+            border: 1px solid #555;
         }
 
         #voiceSelect {
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
-            background: transparent;
-            border: none;
+            background: #333;
+            border: 1px solid #555;
             color: white;
-            padding: 5px 30px 5px 10px;
+            padding: 8px 30px 8px 12px;
             font-size: 1em;
             cursor: pointer;
             width: 100%;
+            border-radius: 4px;
+            transition: all 0.3s ease;
         }
 
+        #voiceSelect:hover {
+            border-color: #4CAF50;
+        }
+
+        #voiceSelect option {
+            background: #333;
+            color: white;
+            padding: 8px;
+        }
+
+        /* Updated slider styles */
+        .slider-container {
+            position: relative;
+            padding: 15px 0;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #444;
+            border-radius: 5px;
+            outline: none;
+            margin: 10px 0;
+        }
+
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            background: #4CAF50;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            background: #4CAF50;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 6px;
+            background: #4CAF50;
+            border-radius: 5px;
+        }
+
+        input[type="range"]::-moz-range-track {
+            height: 6px;
+            background: #4CAF50;
+            border-radius: 5px;
+        }
+
+        .slider-labels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8em;
+            color: #ccc;
+            margin-top: 5px;
+        }
+
+        /* Remove pitch slider related styles */
+        #pitchSlider,
+        #pitchValue {
+            display: none;
+        }
         .history-mils {
             color: #4CAF50;
             font-weight: bold;
@@ -362,31 +427,38 @@
             <div class="settings-toggle" onclick="toggleSettings()">
                 <h3>Audio Settings</h3>
             </div>
-            <div class="settings-group">
-                <label>
-                    <input id="audioEnabled" type="checkbox"> Audio Enabled
-                </label>
-            </div>
-            <div class="settings-row">
+            <div class="settings-content">
                 <div class="settings-group">
-                    <label>Voice:</label>
-                    <select id="voiceSelect"></select>
+                    <label>
+                        <input id="audioEnabled" type="checkbox"> Audio Enabled
+                    </label>
                 </div>
-                <div class="settings-group slider-container">
-                    <label>Volume: <span class="slider-value" id="volumeValue">100</span>%</label>
-                    <input id="volumeSlider" max="100" min="0" type="range" value="100">
-                </div>
-                <div class="settings-group slider-container">
-                    <label>Speed: <span class="slider-value" id="rateValue">1.0</span></label>
-                    <input id="rateSlider" max="2" min="0.5" step="0.1" type="range" value="1">
-                </div>
-                <div class="settings-group slider-container">
-                    <label>Pitch: <span class="slider-value" id="pitchValue">1.0</span></label>
-                    <input id="pitchSlider" max="2" min="0" step="0.1" type="range" value="1">
+                <div class="settings-row">
+                    <div class="settings-group">
+                        <label>Voice:</label>
+                        <div class="voice-select-wrapper">
+                            <select id="voiceSelect"></select>
+                        </div>
+                    </div>
+                    <div class="settings-group slider-container">
+                        <label>Volume: <span class="slider-value" id="volumeValue">100</span>%</label>
+                        <input id="volumeSlider" max="100" min="0" type="range" value="100">
+                        <div class="slider-labels">
+                            <span>0%</span>
+                            <span>100%</span>
+                        </div>
+                    </div>
+                    <div class="settings-group slider-container">
+                        <label>Speed: <span class="slider-value" id="rateValue">1.0</span></label>
+                        <input id="rateSlider" max="2" min="0.5" step="0.1" type="range" value="1">
+                        <div class="slider-labels">
+                            <span>0.5x</span>
+                            <span>2.0x</span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-
         <div class="voice-info">
             <h3>Voice Recognition Information</h3>
             <p>Voice commands work in the background even when alt-tabbed.</p>
@@ -432,8 +504,7 @@
         enabled: true,
         voice: 'UK English Female',
         volume: 1,
-        rate: 1,
-        pitch: 1
+        rate: 1
     };
 
     const rvVoices = [
@@ -453,30 +524,27 @@
         document.getElementById('audioEnabled').checked = audioSettings.enabled;
         document.getElementById('volumeSlider').value = audioSettings.volume * 100;
         document.getElementById('rateSlider').value = audioSettings.rate;
-        document.getElementById('pitchSlider').value = audioSettings.pitch;
         updateSliderValues();
 
-
         const voiceSelect = document.getElementById('voiceSelect');
-        voiceSelect.innerHTML = rvVoices.map(voice => `
-            <option value="${voice}" ${voice === audioSettings.voice ? 'selected' : ''}>
-                ${voice}
-            </option>
-        `).join('');
-
-        // Add nicer styling to the select
-        voiceSelect.parentElement.classList.add('voice-select-wrapper');
+        rvVoices.forEach(voice => {
+            const option = document.createElement('option');
+            option.value = voice;
+            option.textContent = voice;
+            if (voice === audioSettings.voice) {
+                option.selected = true;
+            }
+            voiceSelect.appendChild(option);
+        });
     }
+
 
     function updateSliderValues() {
         document.getElementById('volumeValue').textContent =
             Math.round(document.getElementById('volumeSlider').value);
         document.getElementById('rateValue').textContent =
             document.getElementById('rateSlider').value;
-        document.getElementById('pitchValue').textContent =
-            document.getElementById('pitchSlider').value;
     }
-
     const standardConversion = (meters) => {
         const A = 1001.465;
         const B = -0.2371;
@@ -630,7 +698,7 @@
     }
 
     // Initialize the interval for updating timestamps
-    setInterval(updateHistoryTimestamps, 60000); // Update every minute
+    setInterval(updateHistoryTimestamps, 30000); // Update every minute
 
 
     function getFactionIcon(faction) {
