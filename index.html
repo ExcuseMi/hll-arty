@@ -319,8 +319,8 @@
 
                 <div class="commands">
                     <h3>Voice Commands:</h3>
-                    <p>1. Set faction: "<strong>faction russian</strong>" or "<strong>faction standard</strong>"</p>
-                    <p>2. Calculate: Say a number followed by "meters" (e.g., "<strong>400 meters</strong>")</p>
+                    <p>1. Set faction: "<strong>faction russian / russian forces</strong>" or "<strong>faction standard / standard forces</strong>"</p>
+                    <p>2. Calculate: Say a number followed by "meters" (e.g., "<strong>400 (meters)</strong>"). Saying four zero zero works as well.</p>
                     <p><strong>Note:</strong> For best results, use Chrome or Edge with a clear microphone</p>
                 </div>
             </div>
@@ -607,13 +607,13 @@ if (annyang) {
                 currentFaction = 'russian';
                 updateFactionUI('russian');
                 if (audioEnabled) {
-                    speak('Russian faction selected');
+                    speak('Russian forces selected');
                 }
             } else if (teamLower === 'standard' || ['us', 'uk', 'german', 'axis'].includes(teamLower)) {
                 currentFaction = 'standard';
                 updateFactionUI('standard');
                 if (audioEnabled) {
-                    speak('Standard faction selected');
+                    speak('Standard forces selected');
                 }
             }
             saveSettings();
@@ -624,13 +624,13 @@ if (annyang) {
                 currentFaction = 'russian';
                 updateFactionUI('russian');
                 if (audioEnabled) {
-                    speak('Russian faction selected');
+                    speak('Russian forces selected');
                 }
             } else if (teamLower === 'standard' || ['us', 'uk', 'german', 'axis'].includes(teamLower)) {
                 currentFaction = 'standard';
                 updateFactionUI('standard');
                 if (audioEnabled) {
-                    speak('Standard faction selected');
+                    speak('Standard forces selected');
                 }
             }
             saveSettings();
