@@ -321,7 +321,8 @@
     let currentFaction = 'standard';
     let calculationHistory = [];
     let micPermissionGranted = false;
-
+    let minMeters = 100;
+    let maxMeters = 1600;
     const audioSettings = {
         enabled: true,
         voice: 'UK English Female',
@@ -389,7 +390,7 @@
     };
 
     function calculateMils(meters) {
-        if (isNaN(meters) || meters < 0) return null;
+        if (isNaN(meters) || meters < minMeters || meters > maxMeters) return null;
 
         let mils;
         if (currentFaction === 'russian') {
