@@ -396,16 +396,6 @@ function initWebSpeechVoices() {
 	}
 }
 
-// Save settings to localStorage
-function saveSettings() {
-	audioSettings.enabled = document.getElementById('audioEnabled').checked;
-	audioSettings.voice = document.getElementById('voiceSelect').value;
-	audioSettings.volume = parseFloat(document.getElementById('volumeSlider').value) / 100;
-	audioSettings.rate = parseFloat(document.getElementById('rateSlider').value);
-	audioSettings.pitch = parseFloat(document.getElementById('pitchSlider').value);
-	
-	localStorage.setItem('audioSettings', JSON.stringify(audioSettings));
-}
 
 // Update slider display values
 function updateSliderValues() {
@@ -450,6 +440,15 @@ function saveSettings() {
     localStorage.setItem('currentFaction', currentFaction);
     localStorage.setItem('audioEnabled', JSON.stringify(audioEnabled));
     localStorage.setItem('calculationHistory', JSON.stringify(calculationHistory));
+	
+	audioSettings.enabled = document.getElementById('audioEnabled').checked;
+	audioSettings.voice = document.getElementById('voiceSelect').value;
+	audioSettings.volume = parseFloat(document.getElementById('volumeSlider').value) / 100;
+	audioSettings.rate = parseFloat(document.getElementById('rateSlider').value);
+	audioSettings.pitch = parseFloat(document.getElementById('pitchSlider').value);
+	
+	localStorage.setItem('audioSettings', JSON.stringify(audioSettings));
+
 }
 
 // Clear history
