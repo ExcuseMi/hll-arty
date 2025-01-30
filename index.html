@@ -6,371 +6,449 @@
     <title>HLL Range Calculator</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
     <script src="https://code.responsivevoice.org/responsivevoice.js?key=7V8JRrYm"></script>
-    <style>
-        body {
-            font-family: system-ui, -apple-system, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background: #1a1a1a;
-            color: #ffffff;
-        }
-        .container {
-            background: #2a2a2a;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-        .status {
-            padding: 10px;
-            margin: 10px 0;
-            border-radius: 4px;
-            background: #333;
-        }
-        .faction-selector {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin: 15px 0;
-        }
-        .faction-group {
-            background: #333;
-            padding: 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: 2px solid transparent;
-        }
-        .faction-group:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .faction-group.active {
-            background: #4CAF50;
-            border-color: #45a049;
-        }
-        .faction-group h3 {
-            margin: 0 0 10px 0;
-        }
-        .faction-list {
-            font-size: 0.9em;
-            color: #ccc;
-        }
-        .conversion {
-            font-size: 28px;
-            font-weight: bold;
-            padding: 25px;
-            margin: 20px 0;
-            background: linear-gradient(145deg, #4CAF50, #45a049);
-            color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-            border-radius: 8px;
-            text-align: center;
-        }
-        .control-button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
-            transition: background 0.3s;
-        }
-        .control-button:disabled {
-            background: #777;
-            cursor: not-allowed;
-        }
-        .control-button.active {
-            background: #45a049;
-        }
-        .history {
-            margin-top: 20px;
-            background: #333;
-            padding: 15px;
-            border-radius: 4px;
-            max-height: 200px;
-            overflow-y: auto;
-        }
-        .history-item {
-            padding: 10px;
-            border-bottom: 1px solid #444;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: background 0.3s;
-        }
+<style>
+    :root {
+        --primary: #4CAF50;
+        --primary-hover: #45a049;
+        --accent: #6c5ce7;
+        --accent-hover: #5b4acf;
+        --background: #2a2a2a;
+        --surface: #333;
+        --text: #ffffff;
+        --text-secondary: #ccc;
+    }
 
-        .history-item:hover {
-            background: #444;
-        }
+    body {
+        font-family: system-ui, -apple-system, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #1a1a1a;
+        color: var(--text);
+    }
 
-        .history-faction {
-            font-weight: bold;
-            color: #4CAF50;
-        }
+    .container {
+        background: var(--background);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
 
-        .history-calculation {
-            color: #ccc;
-        }
+    .status {
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 4px;
+        background: var(--surface);
+    }
 
-        .history-timestamp {
-            font-size: 0.8em;
-            color: #888;
-            font-style: italic;
-        }
-        button {
-            background: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            margin: 5px;
-        }
-        button:hover {
-            background: #45a049;
-        }
-        .commands {
-            background: #333;
-            padding: 15px;
-            border-radius: 4px;
-            margin-top: 20px;
-        }
-        input[type="number"] {
-            flex: 1;
-            padding: 12px;
-            border: 1px solid #444;
-            border-radius: 4px;
-            background: #333;
-            color: white;
-            font-size: 1rem;
-            -webkit-appearance: none;
-            -moz-appearance: textfield;
-        }
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        .input-section {
-            margin: 20px 0;
-            padding: 20px;
-            background: #333;
-            border-radius: 4px;
-            text-align: center;
-        }
-        .input-group {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
-        }
-        .voice-info {
-            background: #444;
-            padding: 15px;
-            border-radius: 4px;
-            margin: 20px 0;
-        }
-        .voice-info h3 {
-            color: #4CAF50;
-            margin-bottom: 10px;
-        }
-        .browser-support {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 10px;
-            margin-top: 10px;
-        }
-        .browser-item {
-            background: #333;
-            padding: 10px;
-            border-radius: 4px;
-            text-align: center;
-        }
-        .supported {
-            color: #4CAF50;
-        }
-        .unsupported {
-            color: #ff4444;
-        }
-        .settings-panel {
-            transition: all 0.3s ease;
-            overflow: hidden;
-        }
+    .faction-selector {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 10px;
+        margin: 15px 0;
+    }
 
-        .settings-panel.collapsed {
-            max-height: 60px;
-        }
+    .faction-group {
+        background: var(--surface);
+        padding: 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+    }
 
-        .settings-toggle {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            padding: 15px;
-            background: #3a3a3a;
-            border-radius: 4px;
-        }
+    .faction-group:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
 
-        .settings-toggle h3 {
-            margin: 0;
-        }
+    .faction-group.active {
+        background: var(--accent);
+        border-color: var(--accent-hover);
+    }
 
-        .settings-toggle::after {
-            content: '▼';
-            transition: transform 0.3s;
-        }
+    .faction-group h3 {
+        margin: 0 0 10px 0;
+    }
 
-        .settings-toggle.collapsed::after {
-            transform: rotate(-90deg);
-        }
+    .faction-list {
+        font-size: 0.9em;
+        color: var(--text-secondary);
+    }
 
-        /* Updated select dropdown styles */
-        .voice-select-wrapper {
-            position: relative;
-            background: #444;
-            border-radius: 4px;
-            padding: 8px;
-            border: 1px solid #555;
-        }
+    .conversion {
+        font-size: 28px;
+        font-weight: bold;
+        padding: 25px;
+        margin: 20px 0;
+        background: linear-gradient(145deg, var(--accent), var(--accent-hover));
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        border-radius: 8px;
+        text-align: center;
+    }
 
-        #voiceSelect {
-            appearance: none;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            background: #333;
-            border: 1px solid #555;
-            color: white;
-            padding: 8px 30px 8px 12px;
-            font-size: 1em;
-            cursor: pointer;
-            width: 100%;
-            border-radius: 4px;
-            transition: all 0.3s ease;
-        }
+    .control-button {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+        transition: background 0.3s;
+    }
 
-        #voiceSelect:hover {
-            border-color: #4CAF50;
-        }
+    .control-button:disabled {
+        background: #777;
+        cursor: not-allowed;
+    }
 
-        #voiceSelect option {
-            background: #333;
-            color: white;
-            padding: 8px;
-        }
+    .control-button.active {
+        background: var(--accent-hover);
+    }
 
-        /* Updated slider styles */
-        .slider-container {
-            position: relative;
-            padding: 15px 0;
-        }
+    .history {
+        margin-top: 20px;
+        background: var(--surface);
+        padding: 15px;
+        border-radius: 4px;
+        max-height: 200px;
+        overflow-y: auto;
+    }
 
-        input[type="range"] {
-            -webkit-appearance: none;
-            width: 100%;
-            height: 6px;
-            background: #444;
-            border-radius: 5px;
-            outline: none;
-            margin: 10px 0;
-        }
+    .history-item {
+        padding: 10px;
+        border-bottom: 1px solid #444;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: background 0.3s;
+        position: relative;
+    }
 
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 16px;
-            height: 16px;
-            background: #4CAF50;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
+    .history-item:hover {
+        background: #444;
+    }
 
-        input[type="range"]::-moz-range-thumb {
-            width: 16px;
-            height: 16px;
-            background: #4CAF50;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
+    .history-faction {
+        font-weight: bold;
+        color: var(--accent);
+    }
 
-        input[type="range"]::-webkit-slider-runnable-track {
-            height: 6px;
-            background: #4CAF50;
-            border-radius: 5px;
-        }
+    .history-calculation {
+        color: var(--text-secondary);
+    }
 
-        input[type="range"]::-moz-range-track {
-            height: 6px;
-            background: #4CAF50;
-            border-radius: 5px;
-        }
+    .history-mils {
+        color: var(--accent);
+        font-weight: bold;
+        font-size: 1.1em;
+        text-shadow: 0 0 5px rgba(108, 92, 231, 0.3);
+    }
 
-        .slider-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.8em;
-            color: #ccc;
-            margin-top: 5px;
-        }
+    .history-timestamp {
+        font-size: 0.8em;
+        color: #888;
+        font-style: italic;
+    }
 
-        /* Remove pitch slider related styles */
-        #pitchSlider,
-        #pitchValue {
-            display: none;
-        }
-        .history-mils {
-            color: #4CAF50;
-            font-weight: bold;
-            font-size: 1.1em;
-            text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-        }
+    .history-item:hover::after {
+        content: attr(data-timestamp);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        white-space: nowrap;
+        pointer-events: none;
+    }
 
-        .history-item {
-            position: relative;
-        }
+    .commands {
+        background: var(--surface);
+        padding: 15px;
+        border-radius: 4px;
+        margin-top: 20px;
+    }
 
-        .history-item:hover::after {
-            content: attr(data-timestamp);
-            position: absolute;
-            bottom: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            white-space: nowrap;
-            pointer-events: none;
-        }
-        .settings-group {
-            margin: 15px 0;
-        }
-        .settings-group label {
-            display: block;
-            margin-bottom: 5px;
-            color: #ccc;
-        }
-        .settings-row {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-        .slider-container {
-            flex: 1;
-            min-width: 200px;
-        }
-        .slider-value {
-            display: inline-block;
-            width: 40px;
-            text-align: right;
-        }
-    </style>
-</head>
+    input[type="number"] {
+        flex: 1;
+        padding: 12px;
+        border: 1px solid #444;
+        border-radius: 4px;
+        background: var(--surface);
+        color: white;
+        font-size: 1rem;
+        -webkit-appearance: none;
+        -moz-appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    .input-section {
+        margin: 20px 0;
+        padding: 20px;
+        background: var(--surface);
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .input-group {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+        max-width: 600px;
+        margin: 20px auto;
+    }
+
+    .voice-info {
+        background: var(--surface);
+        padding: 15px;
+        border-radius: 4px;
+        margin: 20px 0;
+    }
+
+    .voice-info h3 {
+        color: var(--accent);
+        margin-bottom: 10px;
+    }
+
+    .browser-support {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
+    }
+
+    .browser-item {
+        background: var(--surface);
+        padding: 10px;
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .supported {
+        color: var(--accent);
+    }
+
+    .unsupported {
+        color: #ff4444;
+    }
+
+    .settings-panel {
+        background: var(--surface);
+        padding: 20px;
+        border-radius: 4px;
+        margin-top: 20px;
+        transition: all 0.3s ease;
+        overflow: hidden;
+    }
+
+    .settings-panel.collapsed {
+        max-height: 60px;
+    }
+
+    .settings-toggle {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+        padding: 15px;
+        background: #3a3a3a;
+        border-radius: 4px;
+    }
+
+    .settings-toggle h3 {
+        margin: 0;
+    }
+
+    .settings-toggle::after {
+        content: '▼';
+        transition: transform 0.3s;
+    }
+
+    .settings-toggle.collapsed::after {
+        transform: rotate(-90deg);
+    }
+
+    .settings-group {
+        margin: 15px 0;
+    }
+
+    .settings-group label {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--text-secondary);
+    }
+
+    .settings-row {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+    }
+
+    .slider-container {
+        position: relative;
+        padding: 15px 0;
+        flex: 1;
+        min-width: 200px;
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 6px;
+        background: #444;
+        border-radius: 5px;
+        outline: none;
+        margin: 10px 0;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 16px;
+        height: 16px;
+        background: var(--accent);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    input[type="range"]::-moz-range-thumb {
+        width: 16px;
+        height: 16px;
+        background: var(--accent);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+        height: 6px;
+        background: var(--accent);
+        border-radius: 5px;
+    }
+
+    input[type="range"]::-moz-range-track {
+        height: 6px;
+        background: var(--accent);
+        border-radius: 5px;
+    }
+
+    .slider-labels {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.8em;
+        color: var(--text-secondary);
+        margin-top: 5px;
+    }
+
+    .checkbox-group {
+        position: relative;
+        padding-left: 30px;
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .checkbox-group input {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 0;
+        width: 0;
+    }
+
+    .checkmark {
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        height: 20px;
+        width: 20px;
+        background-color: var(--surface);
+        border: 2px solid var(--accent);
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    .checkbox-group:hover input ~ .checkmark {
+        border-color: var(--accent-hover);
+    }
+
+    .checkbox-group input:checked ~ .checkmark {
+        background-color: var(--accent);
+        border-color: var(--accent);
+    }
+
+    .checkmark:after {
+        content: "";
+        position: absolute;
+        display: none;
+        left: 6px;
+        top: 2px;
+        width: 5px;
+        height: 10px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+
+    .checkbox-group input:checked ~ .checkmark:after {
+        display: block;
+    }
+
+    .voice-select-wrapper {
+        position: relative;
+        background: #444;
+        border-radius: 4px;
+        padding: 8px;
+        border: 1px solid var(--accent);
+    }
+
+    .voice-select-wrapper::after {
+        content: '▼';
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        pointer-events: none;
+        color: var(--text-secondary);
+    }
+
+    #voiceSelect {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background: var(--surface);
+        border: none;
+        color: white;
+        padding: 8px 30px 8px 12px;
+        font-size: 1em;
+        cursor: pointer;
+        width: 100%;
+        border-radius: 4px;
+        transition: all 0.3s ease;
+    }
+
+    #voiceSelect:hover {
+        border-color: var(--accent-hover);
+    }
+
+    #voiceSelect option {
+        background: var(--surface);
+        color: white;
+        padding: 8px;
+    }
+</style></head>
 <body>
 <div class="container">
     <div class="calculator">
@@ -429,8 +507,10 @@
             </div>
             <div class="settings-content">
                 <div class="settings-group">
-                    <label>
-                        <input id="audioEnabled" type="checkbox"> Audio Enabled
+                    <label class="checkbox-group">
+                        <input id="audioEnabled" type="checkbox">
+                        <span class="checkmark"></span>
+                        Audio Enabled
                     </label>
                 </div>
                 <div class="settings-row">
@@ -520,6 +600,17 @@
         if (savedSettings) {
             Object.assign(audioSettings, JSON.parse(savedSettings));
         }
+
+        // Update checkbox initialization
+        const audioEnabledCheckbox = document.getElementById('audioEnabled');
+        audioEnabledCheckbox.checked = audioSettings.enabled;
+
+        // Add event listener for the new checkbox
+        audioEnabledCheckbox.addEventListener('change', function() {
+            audioSettings.enabled = this.checked;
+            saveSettings();
+        });
+
 
         document.getElementById('audioEnabled').checked = audioSettings.enabled;
         document.getElementById('volumeSlider').value = audioSettings.volume * 100;
