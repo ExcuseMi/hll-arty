@@ -178,8 +178,40 @@
             color: #ff4444;
         }
 
-        /* Rest of the previous styles remain the same */
-    </style>
+       .settings-panel {
+            background: #333;
+            padding: 20px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+
+        .settings-group {
+            margin: 15px 0;
+        }
+
+        .settings-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #ccc;
+        }
+
+        .settings-row {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .slider-container {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .slider-value {
+            display: inline-block;
+            width: 40px;
+            text-align: right;
+        }
+	</style>
 </head>
 <body>
     <div class="container">
@@ -189,8 +221,39 @@
 			<div class="control-panel">
 				<button id="startBtn" class="control-button">Start Voice</button>
 				<button id="stopBtn" class="control-button" disabled>Stop Voice</button>
-				<button id="audioBtn" class="control-button">Sound enabled</button>
 				<button id="clearHistoryBtn" class="control-button">Clear History</button>
+			</div>
+			<div class="container">
+				<div class="settings-panel">
+					<h3>Audio Settings</h3>
+					<div class="settings-group">
+						<label>
+							<input type="checkbox" id="audioEnabled"> Audio Enabled
+						</label>
+					</div>
+					
+					<div class="settings-row">
+						<div class="settings-group">
+							<label>Voice:</label>
+							<select id="voiceSelect"></select>
+						</div>
+						
+						<div class="settings-group slider-container">
+							<label>Volume: <span class="slider-value" id="volumeValue">100</span>%</label>
+							<input type="range" id="volumeSlider" min="0" max="100" value="100">
+						</div>
+
+						<div class="settings-group slider-container">
+							<label>Speed: <span class="slider-value" id="rateValue">1.0</span></label>
+							<input type="range" id="rateSlider" min="0.5" max="2" step="0.1" value="1">
+						</div>
+
+						<div class="settings-group slider-container">
+							<label>Pitch: <span class="slider-value" id="pitchValue">1.0</span></label>
+							<input type="range" id="pitchSlider" min="0" max="2" step="0.1" value="1">
+						</div>
+					</div>
+				</div>
 			</div>
 
             
@@ -267,7 +330,92 @@
 let currentFaction = 'standard';
 let calculationHistory = [];
 let micPermissionGranted = false;
-let audioEnabled = true;
+
+// Audio settings object
+const audioSettings = {
+	enabled: true,
+	voice: 'UK English Female',
+	volume: 1,
+	rate: 1,
+	pitch: 1
+};
+
+// Available ResponsiveVoice voices
+const rvVoices = [
+	'UK English Female',
+	'UK English Male',
+	'US English Female',
+	'US English Male',
+	'Australian Female'
+];
+
+// Initialize settings
+function initSettings() {
+	// Load from localStorage
+	const savedSettings = localStorage.getItem('audioSettings');
+	if (savedSettings) {
+		Object.assign(audioSettings, JSON.parse(savedSettings));
+	}
+
+	// Set UI elements
+	document.getElementById('audioEnabled').checked = audioSettings.enabled;
+	document.getElementById('volumeSlider').value = audioSettings.volume * 100;
+	document.getElementById('rateSlider').value = audioSettings.rate;
+	document.getElementById('pitchSlider').value = audioSettings.pitch;
+	updateSliderValues();
+
+	// Populate voice select
+	const voiceSelect = document.getElementById('voiceSelect');
+	rvVoices.forEach(voice => {
+		const option = document.createElement('option');
+		option.value = voice;
+		option.textContent = voice;
+		voiceSelect.appendChild(option);
+	});
+	voiceSelect.value = audioSettings.voice;
+
+	// Initialize Web Speech voices
+	initWebSpeechVoices();
+}
+
+// Initialize Web Speech API voices
+function initWebSpeechVoices() {
+	if ('speechSynthesis' in window) {
+		speechSynthesis.onvoiceschanged = () => {
+			const voices = speechSynthesis.getVoices();
+			const voiceSelect = document.getElementById('voiceSelect');
+			
+			voices.filter(v => v.lang.startsWith('en-')).forEach(voice => {
+				const option = document.createElement('option');
+				option.value = voice.name;
+				option.textContent = `${voice.name} (${voice.lang})`;
+				voiceSelect.appendChild(option);
+			});
+		};
+	}
+}
+
+// Save settings to localStorage
+function saveSettings() {
+	audioSettings.enabled = document.getElementById('audioEnabled').checked;
+	audioSettings.voice = document.getElementById('voiceSelect').value;
+	audioSettings.volume = parseFloat(document.getElementById('volumeSlider').value) / 100;
+	audioSettings.rate = parseFloat(document.getElementById('rateSlider').value);
+	audioSettings.pitch = parseFloat(document.getElementById('pitchSlider').value);
+	
+	localStorage.setItem('audioSettings', JSON.stringify(audioSettings));
+}
+
+// Update slider display values
+function updateSliderValues() {
+	document.getElementById('volumeValue').textContent = 
+		Math.round(document.getElementById('volumeSlider').value);
+	document.getElementById('rateValue').textContent = 
+		document.getElementById('rateSlider').value;
+	document.getElementById('pitchValue').textContent = 
+		document.getElementById('pitchSlider').value;
+        }
+
 // Standard conversion for US, UK, and German forces
 const standardConversion = (meters) => {
 	const A = 1001.465;
@@ -360,7 +508,7 @@ function calculateMils(meters) {
     document.getElementById('conversion').textContent = `${meters} meters = ${mils} mils`;
     addToHistory(meters, mils, currentFaction);
 
-    if (audioEnabled && 'speechSynthesis' in window) {
+    if ('speechSynthesis' in window) {
         speak(`${mils} mils`);
     }
 
@@ -414,13 +562,39 @@ document.getElementById('russianFaction').addEventListener('click', () => {
     saveSettings();
 });
 
-// Speech synthesis
+
+// Speak function with fallback
 function speak(text) {
-    if ('speechSynthesis' in window) {
-        const utterance = new SpeechSynthesisUtterance(text);
-        window.speechSynthesis.speak(utterance);
-    }
+	if (!audioSettings.enabled) return;
+
+	try {
+		// Try ResponsiveVoice first
+		if (typeof responsiveVoice !== 'undefined') {
+			responsiveVoice.speak(text, audioSettings.voice, {
+				volume: audioSettings.volume,
+				rate: audioSettings.rate,
+				pitch: audioSettings.pitch
+			});
+		} 
+		// Fallback to Web Speech API
+		else if ('speechSynthesis' in window) {
+			const utterance = new SpeechSynthesisUtterance(text);
+			const voices = speechSynthesis.getVoices();
+			const voice = voices.find(v => v.name === audioSettings.voice);
+			
+			if (voice) utterance.voice = voice;
+			utterance.volume = audioSettings.volume;
+			utterance.rate = audioSettings.rate;
+			utterance.pitch = audioSettings.pitch;
+			
+			speechSynthesis.speak(utterance);
+		}
+	} catch (e) {
+		console.error('Speech error:', e);
+	}
 }
+
+
 
 // Clear history button
 document.getElementById('clearHistoryBtn').addEventListener('click', () => {
@@ -459,13 +633,6 @@ if (annyang) {
 
     annyang.addCommands(commands);
 
-    // Toggle audio state
-    document.getElementById('audioBtn').addEventListener('click', () => {
-        audioEnabled = !audioEnabled;
-        document.getElementById('audioBtn').textContent = audioEnabled ? 'Sound enabled' : 'Sound disabled';
-        saveSettings();
-    });
-
     // Start button handler
     document.getElementById('startBtn').addEventListener('click', async () => {
         if (!micPermissionGranted) {
@@ -484,7 +651,20 @@ if (annyang) {
         document.getElementById('status').textContent = 'Status: Not listening';
         updateButtonStates(false);
     });
-
+	document.getElementById('audioEnabled').addEventListener('change', saveSettings);
+	document.getElementById('voiceSelect').addEventListener('change', saveSettings);
+	document.getElementById('volumeSlider').addEventListener('input', () => {
+		updateSliderValues();
+		saveSettings();
+	});
+	document.getElementById('rateSlider').addEventListener('input', () => {
+		updateSliderValues();
+		saveSettings();
+	});
+	document.getElementById('pitchSlider').addEventListener('input', () => {
+		updateSliderValues();
+		saveSettings();
+	});
     // Error handling
     annyang.addCallback('error', function(err) {
         console.error('Annyang error:', err);
