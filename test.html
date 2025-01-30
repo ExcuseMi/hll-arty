@@ -41,22 +41,32 @@
         background: var(--surface);
     }
 
-    .faction-selector {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 10px;
-        margin: 15px 0;
-    }
+.faction-selector {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columns for 4 factions */
+    gap: 10px;
+    margin: 15px 0;
+}
 
-    .faction-group {
-        background: var(--surface);
-        padding: 15px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.3s;
-        border: 2px solid transparent;
-    }
+.faction-group {
+    background: var(--surface);
+    padding: 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid transparent;
+    text-align: center; /* Center the content */
+}
 
+.faction-group h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.1em; /* Slightly larger text */
+}
+
+.faction-list {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+}
     .faction-group:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(0,0,0,0.2);
@@ -67,14 +77,6 @@
         border-color: var(--accent-hover);
     }
 
-    .faction-group h3 {
-        margin: 0 0 10px 0;
-    }
-
-    .faction-list {
-        font-size: 0.9em;
-        color: var(--text-secondary);
-    }
 
     .conversion {
         font-size: 28px;
@@ -572,27 +574,22 @@
 
         <div class="faction-selector">
             <div class="faction-group active" id="usFaction">
-                <h3>US Forces</h3>
-                <div class="faction-list">155MM HOWITZER M114
-                </div>
+                <h3>⭐ US Forces</h3>
+                <div class="faction-list">155MM HOWITZER M114</div>
             </div>
             <div class="faction-group" id="germanyFaction">
-                <h3>German Forces</h3>
-                <div class="faction-list">150MM HOWITZER SFH 18
-                </div>
+                <h3>⚔️ German Forces</h3>
+                <div class="faction-list">150MM HOWITZER SFH 18</div>
             </div>
             <div class="faction-group" id="russianFaction">
-                <h3>Russian Forces</h3>
-                <div class="faction-list">M122MM HOWITZER 1938 (M-30)
-                </div>
+                <h3>🇷🇺 Russian Forces</h3>
+                <div class="faction-list">M122MM HOWITZER 1938 (M-30)</div>
             </div>
             <div class="faction-group" id="britishFaction">
-                <h3>British Forces</h3>
-                <div class="faction-list">QF 25-POUNDER
-                </div>
+                <h3>🇬🇧 British Forces</h3>
+                <div class="faction-list">QF 25-POUNDER</div>
             </div>
         </div>
-
         <div class="input-section">
             <h3>Enter Distance</h3>
             <div class="input-group">
@@ -1062,7 +1059,7 @@ class MilitaryAudioPlayer {
         return FACTION_DATA[faction].icon;
 
     }
-    function speakMils(mils) {
+    async function speakMils(mils) {
         await audioPlayer.playMils(mils);
     }
     // Request microphone permission
