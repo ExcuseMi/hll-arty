@@ -93,13 +93,31 @@
             overflow-y: auto;
         }
         .history-item {
-            padding: 8px;
+            padding: 10px;
             border-bottom: 1px solid #444;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s;
         }
-        .history-item:last-child {
-            border-bottom: none;
+
+        .history-item:hover {
+            background: #444;
+        }
+
+        .history-faction {
+            font-weight: bold;
+            color: #4CAF50;
+        }
+
+        .history-calculation {
+            color: #ccc;
+        }
+
+        .history-timestamp {
+            font-size: 0.8em;
+            color: #888;
+            font-style: italic;
         }
         button {
             background: #4CAF50;
@@ -462,30 +480,59 @@
         }
     }
 
-    // Add to history
+    function getRelativeTime(timestamp) {
+        const now = new Date();
+        const diffInSeconds = Math.floor((now - new Date(timestamp)) / 1000);
+
+        if (diffInSeconds < 60) {
+            return `${diffInSeconds} second${diffInSeconds === 1 ? '' : 's'} ago`;
+        } else if (diffInSeconds < 3600) {
+            const diffInMinutes = Math.floor(diffInSeconds / 60);
+            return `${diffInMinutes} minute${diffInMinutes === 1 ? '' : 's'} ago`;
+        } else if (diffInSeconds < 86400) {
+            const diffInHours = Math.floor(diffInSeconds / 3600);
+            return `${diffInHours} hour${diffInHours === 1 ? '' : 's'} ago`;
+        } else {
+            const diffInDays = Math.floor(diffInSeconds / 86400);
+            return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
+        }
+    }
     function addToHistory(meters, mils, faction) {
+        const capitalizedFaction = faction.charAt(0).toUpperCase() + faction.slice(1); // Capitalize the first letter
         calculationHistory.unshift({
             meters,
             mils,
-            faction,
-            timestamp: new Date().toLocaleTimeString()
+            faction: capitalizedFaction, // Use the capitalized faction
+            timestamp: new Date() // Store the actual timestamp
         });
         if (calculationHistory.length > 10) calculationHistory.pop();
         updateHistoryUI();
         saveSettings();
     }
 
-    // Update history UI
     function updateHistoryUI() {
-        const historyHTML = calculationHistory.map(item => `
+        const historyList = document.getElementById('historyList');
+        historyList.innerHTML = calculationHistory.map(item => `
             <div class="history-item">
-                <span>${item.timestamp} - ${item.faction}</span>
-                <span>${item.meters}m = ${item.mils} mils</span>
+                <span class="history-faction">${getFactionIcon(item.faction)} ${item.faction}</span>
+                <span class="history-calculation">${item.meters}m = ${item.mils} mils</span>
+                <span class="history-timestamp">${getRelativeTime(item.timestamp)}</span>
             </div>
         `).join('');
-        document.getElementById('historyList').innerHTML = historyHTML;
     }
 
+    function getFactionIcon(faction) {
+        switch (faction.toLowerCase()) {
+            case 'standard':
+                return '⚔️'; // Sword icon for standard forces
+            case 'russian':
+                return '🇷🇺'; // Russian flag for Russian forces
+            case 'british':
+                return '🇬🇧'; // British flag for British forces
+            default:
+                return '🎯'; // Default target icon
+        }
+    }
     function speakMils(mils) {
         console.log('Speaking mils:', mils);
         if (!audioSettings.enabled) {
