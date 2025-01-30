@@ -605,7 +605,6 @@
         audioSettings.voice = document.getElementById('voiceSelect').value;
         audioSettings.volume = parseFloat(document.getElementById('volumeSlider').value) / 100;
         audioSettings.rate = parseFloat(document.getElementById('rateSlider').value);
-        audioSettings.pitch = parseFloat(document.getElementById('pitchSlider').value);
 
         localStorage.setItem('audioSettings', JSON.stringify(audioSettings));
 
