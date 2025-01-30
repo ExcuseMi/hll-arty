@@ -268,7 +268,20 @@ let currentFaction = 'standard';
 let calculationHistory = [];
 let micPermissionGranted = false;
 let audioEnabled = true;
+// Standard conversion for US, UK, and German forces
+const standardConversion = (meters) => {
+	const A = 1001.465;
+	const B = -0.2371;
+	return Math.round(A + (B * meters));
+};
 
+// Russian conversion
+const russianConversion = (meters) => {
+	const A = 1120;
+	const B = 21.33;
+	const L = 100;
+	return Math.round(A - (((meters / L) - 1) * B));
+};
 // Load settings and history from localStorage
 function loadSettings() {
     const savedFaction = localStorage.getItem('currentFaction');
