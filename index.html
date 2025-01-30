@@ -617,7 +617,7 @@
              'repeat': function() {
                 console.log('Repeat command triggered');
                 if (calculationHistory.length > 0) {
-                    const lastMils = calculationHistory[O].mils;
+                    const lastMils = calculationHistory[0].mils;
                     console.log('Last mils:', lastMils);
                     speakMils(lastMils);
                 } else {
