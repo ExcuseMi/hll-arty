@@ -387,6 +387,7 @@ function initWebSpeechVoices() {
 			const voiceSelect = document.getElementById('voiceSelect');
 			
 			voices.filter(v => v.lang.startsWith('en-')).forEach(voice => {
+			    console.log(voice.name);
 				const option = document.createElement('option');
 				option.value = voice.name;
 				option.textContent = `${voice.name} (${voice.lang})`;
