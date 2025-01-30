@@ -494,6 +494,67 @@
         color: white;
         padding: 8px;
     }
+
+        .history {
+        margin-top: 20px;
+        background: var(--surface);
+        padding: 15px;
+        border-radius: 4px;
+        position: relative;
+    }
+
+    .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+
+    .history-header h3 {
+        margin: 0;
+    }
+
+    #clearHistoryBtn {
+        background: #ff4444;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    #clearHistoryBtn:hover {
+        background: #cc0000;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    #clearHistoryBtn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    .history-content {
+        max-height: 200px;
+        overflow-y: auto;
+        padding-right: 10px;
+    }
+
+    /* Remove the clear history button from control-panel */
+    .control-panel {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+
+    .control-panel #clearHistoryBtn {
+        display: none;
+    }
 </style>
 </head>
 <body>
@@ -504,7 +565,7 @@
         <div class="control-panel">
             <button class="control-button" id="startBtn">Start Voice</button>
             <button class="control-button" disabled id="stopBtn">Stop Voice</button>
-            <button class="control-button" id="clearHistoryBtn">Clear History</button>
+
             <button class="control-button" id="enableNotificationsBtn">Enable Notifications</button>
         </div>
         <div class="status" id="status">Status: Not listening</div>
@@ -544,9 +605,13 @@
         <div class="conversion" id="conversion">Waiting for input...</div>
 
         <div class="history">
+        <div class="history-header">
             <h3>Calculation History</h3>
-            <div id="historyList"></div>
+            <button class="control-button" id="clearHistoryBtn">Clear History</button>
         </div>
+        <div class="history-content" id="historyList">
+        </div>
+    </div>
 
         <div class="settings-panel">
             <div class="settings-toggle" onclick="toggleSettings()">
