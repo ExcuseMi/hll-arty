@@ -1,0 +1,150 @@
+{
+    "voices": {
+        "us": {
+            "name": "US Artillery",
+            "voice_id": "KLZOWyG48RjZkAAjuM89",
+            "icon": "⭐",
+            "accent": "american",
+            "phrases": {
+                "startup": "Artillery command ready for coordinates",
+                "faction_selected": "Artillery battery ready",
+                "stop_response": "Ending transmission, command out",
+                "repeat": "Say again, over",
+                "previous": "Last coordinates, over",
+                "calculating": "Calculating firing solution",
+                "coordinates_received": "Coordinates confirmed, over",
+                "invalid_distance": "Invalid range, repeat",
+                "out_of_range": "Out of effective range",
+                "microphone_error": "Radio malfunction",
+                "set": "Set",
+                "over": "Over!",
+                "copy": "Copy!"
+
+            },
+            "digits": {
+                "0": "zero",
+                "1": "one",
+                "2": "two",
+                "3": "three",
+                "4": "four",
+                "5": "five",
+                "6": "six",
+                "7": "seven",
+                "8": "eight",
+                "9": "nine",
+                "mils": "mils"
+            }
+        },
+        "german": {
+            "name": "German Artillery",
+            "voice_id": "A9evEp8yGjv4c3WsIKuY",
+
+            "icon": "⚔️",
+            "accent": "german",
+            "phrases": {
+                "startup": "Artillery command activated",
+                "faction_selected": "Artillery prepared, Herr Kommandant",
+                "stop_response": "Transmission ended, Herr Kommandant",
+                "repeat": "Repeat coordinates, over",
+                "previous": "Previous coordinates, over",
+                "calculating": "Calculating trajectory",
+                "coordinates_received": "Coordinates confirmed, over",
+                "invalid_distance": "Invalid distance, repeat",
+                "out_of_range": "Out of operational range",
+                "microphone_error": "Communication system failure",
+                "set": "Set",
+                "over": "Over!",
+                "copy": "Copy!"
+
+            },
+            "digits": {
+                "0": "zero",
+                "1": "one",
+                "2": "two",
+                "3": "three",
+                "4": "four",
+                "5": "five",
+                "6": "six",
+                "7": "seven",
+                "8": "eight",
+                "9": "nine",
+                "mils": "mils"
+            }
+        },
+        "british": {
+            "name": "British Artillery",
+            "voice_id": "UlQzP061AqptrSLuYnFf",
+            "icon": "🇬🇧",
+            "accent": "british",
+            "phrases": {
+                "startup": "Artillery command online, awaiting orders",
+                "faction_selected": "Artillery standing by, sir",
+                "stop_response": "Ending transmission, over and out",
+                "repeat": "Say again, over",
+                "previous": "Last coordinates, over",
+                "calculating": "Calculating firing solution",
+                "coordinates_received": "Coordinates confirmed, over",
+                "invalid_distance": "Invalid range, repeat",
+                "out_of_range": "Out of effective range",
+                "microphone_error": "Radio malfunction",
+                "set": "Set",
+                "over": "Over!",
+                "copy": "Copy!"
+
+
+            },
+            "digits": {
+                "0": "zero",
+                "1": "one",
+                "2": "two",
+                "3": "three",
+                "4": "four",
+                "5": "five",
+                "6": "six",
+                "7": "seven",
+                "8": "eight",
+                "9": "nine",
+                "mils": "mils"
+            }
+        },
+        "russian": {
+            "name": "Russian Artillery",
+            "voice_id": "froLDspwCiytX4g1Pobg",
+            "icon": "🇷🇺",
+            "accent": "russian",
+            "phrases": {
+                "startup": "Artillery command ready for coordinates",
+                "faction_selected": "Artillery prepared, comrade",
+                "stop_response": "Transmission completed, comrade",
+                "repeat": "Repeat coordinates, over",
+                "previous": "Previous coordinates, over",
+                "calculating": "Calculating trajectory",
+                "coordinates_received": "Coordinates confirmed, over",
+                "invalid_distance": "Invalid distance, repeat",
+                "out_of_range": "Out of operational range",
+                "microphone_error": "Communication system failure",
+                "set": "Set",
+                "over": "Over!",
+                "copy": "Copy!"
+
+
+            },
+            "digits": {
+                "0": "zero",
+                "1": "one",
+                "2": "two",
+                "3": "three",
+                "4": "four",
+                "5": "five",
+                "6": "six",
+                "7": "seven",
+                "8": "eight",
+                "9": "nine",
+                "mils": "mils"
+            }
+        }
+    },
+    "common": {
+        "stop_command": "end transmission"
+    }
+}
