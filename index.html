@@ -489,7 +489,11 @@
     }
 
     function speakMils(mils) {
-        if (!audioSettings.enabled) return;
+        console.log('Speaking mils:', mils);
+        if (!audioSettings.enabled) {
+            console.log('Audio is disabled');
+            return;
+        }
 
         const digits = String(mils).split('');
         const digitWords = {
@@ -507,6 +511,7 @@
 
         const spokenDigits = digits.map(d => digitWords[d]).join(' ');
         const text = `${spokenDigits} mils`;
+        console.log('Text to speak:', text);
 
         try {
             if (typeof responsiveVoice !== 'undefined') {
@@ -515,12 +520,13 @@
                     rate: audioSettings.rate,
                     pitch: audioSettings.pitch
                 });
+            } else {
+                console.error('ResponsiveVoice is not loaded');
             }
         } catch (e) {
             console.error('Speech error:', e);
         }
     }
-
     // Request microphone permission
     async function requestMicrophonePermission() {
         try {
@@ -657,35 +663,41 @@
                 calculateMils(meters);
             },
             'repeat': function() {
-                console.log("repeat command");
-
+                console.log('Repeat command triggered');
                 if (calculationHistory.length > 0) {
                     const lastMils = calculationHistory[0].mils;
+                    console.log('Last mils:', lastMils);
                     speakMils(lastMils);
+                } else {
+                    console.log('No history to repeat');
                 }
             },
             'previous': function() {
-                console.log("previous command");
+                console.log('Previous command triggered');
                 if (calculationHistory.length > 1) {
                     const previousMils = calculationHistory[1].mils;
+                    console.log('Previous mils:', previousMils);
                     speakMils(previousMils);
+                } else {
+                    console.log('Not enough history for previous');
                 }
             }
         };
         annyang.addCommands(commands);
 
         document.getElementById('startBtn').addEventListener('click', async () => {
-            if (!micPermissionGranted) {
-                const permitted = await requestMicrophonePermission();
-                if (!permitted) {
-                    console.error('Microphone permission is not granted.');
-                    return;
-                }
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                stream.getTracks().forEach(track => track.stop()); // Stop the stream immediately
+                micPermissionGranted = true;
+                annyang.start({ autoRestart: true, continuous: true });
+                document.getElementById('status').textContent = 'Status: Listening';
+                updateButtonStates(true);
+            } catch (err) {
+                console.error('Microphone permission denied:', err);
+                document.getElementById('status').textContent = 'Status: Microphone access denied';
+                document.getElementById('startBtn').disabled = true;
             }
-
-            annyang.start({ autoRestart: true, continuous: true });
-            document.getElementById('status').textContent = 'Status: Listening';
-            updateButtonStates(true);
         });
 
         // Stop button handler
