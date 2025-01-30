@@ -444,7 +444,6 @@ function loadSettings() {
 
     updateFactionUI(currentFaction);
     updateHistoryUI();
-    document.getElementById('audioBtn').textContent = audioEnabled ? 'Sound enabled' : 'Sound disabled';
 }
 
 // Save settings and history to localStorage
@@ -699,7 +698,6 @@ if (annyang) {
 
 // Set initial button states
 updateButtonStates(false);
-document.getElementById('audioBtn').textContent = audioEnabled ? 'Sound enabled' : 'Sound disabled';
 
 // Load settings on page load
 loadSettings();
