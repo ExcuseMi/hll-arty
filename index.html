@@ -657,12 +657,15 @@
                 calculateMils(meters);
             },
             'repeat': function() {
+                console.log("repeat command");
+
                 if (calculationHistory.length > 0) {
                     const lastMils = calculationHistory[0].mils;
                     speakMils(lastMils);
                 }
             },
             'previous': function() {
+                console.log("previous command");
                 if (calculationHistory.length > 1) {
                     const previousMils = calculationHistory[1].mils;
                     speakMils(previousMils);
