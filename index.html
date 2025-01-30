@@ -216,6 +216,7 @@
             <button class="control-button" id="startBtn">Start Voice</button>
             <button class="control-button" disabled id="stopBtn">Stop Voice</button>
             <button class="control-button" id="clearHistoryBtn">Clear History</button>
+            <button class="control-button" id="enableNotificationsBtn">Enable Notifications</button>
         </div>
         <div class="status" id="status">Status: Not listening</div>
 
@@ -740,11 +741,29 @@
             }
         }
     });
-
+    document.getElementById('enableNotificationsBtn').addEventListener('click', () => {
+        if ('Notification' in window) {
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    alert('Notifications enabled! You will now receive updates.');
+                } else {
+                    alert('Notifications permission denied. You can enable it later in your browser settings.');
+                }
+            });
+        } else {
+            alert('This browser does not support notifications.');
+        }
+    });
 
     // Only request notification permission once
     if ('Notification' in window && Notification.permission === 'default') {
-        Notification.requestPermission();
+            Notification.requestPermission().then(permission => {
+                if (permission === 'granted') {
+                    document.getElementById('enableNotificationsBtn').hide = True
+                } else {
+                    alert('Notifications permission denied. You can enable it later in your browser settings.');
+                }
+            });
     }
 </script>
 </body>
