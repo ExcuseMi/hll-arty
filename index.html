@@ -309,8 +309,10 @@
             </div>
             <div class="commands">
                 <h3>Voice Commands:</h3>
-                <p>1. Set faction: "<strong>faction russian / russian forces</strong>", "<strong>faction british / british forces</strong>", or "<strong>faction standard / standard forces</strong>"</p>
-                <p>2. Calculate: Say a number followed by "meters" (e.g., "<strong>400 (meters)</strong>"). Saying four zero zero works as well.</p>
+                <p>1. Set faction: "<strong>faction russian / russian forces</strong>", "<strong>faction british /
+                    british forces</strong>", or "<strong>faction standard / standard forces</strong>"</p>
+                <p>2. Calculate: Say a number followed by "meters" (e.g., "<strong>400 (meters)</strong>"). Saying four
+                    zero zero works as well.</p>
                 <p><strong>Note:</strong> For best results, use Chrome or Edge with a clear microphone</p>
             </div>
         </div>
@@ -649,9 +651,20 @@
             ':number': function(number) {
                 const meters = parseInt(number);
                 calculateMils(meters);
+            },
+            'repeat': function() {
+                if (calculationHistory.length > 0) {
+                    const lastMils = calculationHistory[0].mils;
+                    speakMils(lastMils);
+                }
+            },
+            'previous': function() {
+                if (calculationHistory.length > 1) {
+                    const previousMils = calculationHistory[1].mils;
+                    speakMils(previousMils);
+                }
             }
         };
-
         annyang.addCommands(commands);
 
         document.getElementById('startBtn').addEventListener('click', async () => {
