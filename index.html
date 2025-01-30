@@ -954,10 +954,7 @@
             updateSliderValues();
             saveSettings();
         });
-        document.getElementById('pitchSlider').addEventListener('input', () => {
-            updateSliderValues();
-            saveSettings();
-        });
+
         // Error handling
         annyang.addCallback('error', function(err) {
             console.error('Annyang error:', err);
