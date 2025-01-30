@@ -1152,7 +1152,7 @@ class MilitaryAudioPlayer {
     document.getElementById('clearHistoryBtn').addEventListener('click', () => {
         clearHistory();
     });
-    function speakFactionSelected(faction) {
+    async function speakFactionSelected(faction) {
         await audioPlayer.playPhrase('faction_selected');
     }
     function factionChange(team) {
