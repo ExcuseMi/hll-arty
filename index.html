@@ -441,14 +441,18 @@
         saveSettings();
     }
 
-    // Update faction UI
+    // Update updateFactionUI function
     function updateFactionUI(faction) {
         document.getElementById('standardFaction').classList.remove('active');
         document.getElementById('russianFaction').classList.remove('active');
+        document.getElementById('britishFaction').classList.remove('active');
+
         if (faction === 'standard') {
             document.getElementById('standardFaction').classList.add('active');
-        } else {
+        } else if (faction === 'russian') {
             document.getElementById('russianFaction').classList.add('active');
+        } else if (faction === 'british') {
+            document.getElementById('britishFaction').classList.add('active');
         }
     }
 
