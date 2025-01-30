@@ -478,6 +478,12 @@
 			}
 		}
 	});
+	
+
+        // Only request notification permission once
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
     </script>
 </body>
 </html>
