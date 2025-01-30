@@ -616,6 +616,26 @@
     // Voice recognition setup
     if (annyang) {
         const commands = {
+                    'repeat': function() {
+                console.log('Repeat command triggered');
+                if (calculationHistory.length > 0) {
+                    const lastMils = calculationHistory[0].mils;
+                    console.log('Last mils:', lastMils);
+                    speakMils(lastMils);
+                } else {
+                    console.log('No history to repeat');
+                }
+            },
+            'previous': function() {
+                console.log('Previous command triggered');
+                if (calculationHistory.length > 1) {
+                    const previousMils = calculationHistory[1].mils;
+                    console.log('Previous mils:', previousMils);
+                    speakMils(previousMils);
+                } else {
+                    console.log('Not enough history for previous');
+                }
+            },
             'faction *team': function(team) {
                 const teamLower = team.toLowerCase();
                 if (teamLower === 'russian') {
@@ -661,26 +681,6 @@
             ':number': function(number) {
                 const meters = parseInt(number);
                 calculateMils(meters);
-            },
-            'repeat': function() {
-                console.log('Repeat command triggered');
-                if (calculationHistory.length > 0) {
-                    const lastMils = calculationHistory[0].mils;
-                    console.log('Last mils:', lastMils);
-                    speakMils(lastMils);
-                } else {
-                    console.log('No history to repeat');
-                }
-            },
-            'previous': function() {
-                console.log('Previous command triggered');
-                if (calculationHistory.length > 1) {
-                    const previousMils = calculationHistory[1].mils;
-                    console.log('Previous mils:', previousMils);
-                    speakMils(previousMils);
-                } else {
-                    console.log('Not enough history for previous');
-                }
             }
         };
         annyang.addCommands(commands);
