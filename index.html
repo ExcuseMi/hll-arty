@@ -694,6 +694,8 @@ if (annyang) {
     document.getElementById('stopBtn').disabled = true;
     document.getElementById('status').textContent = 'Voice recognition not available';
 }
+// Initialize on load
+initSettings();
 
 // Set initial button states
 updateButtonStates(false);
