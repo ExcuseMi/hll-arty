@@ -614,10 +614,10 @@
     // Voice recognition setup
     if (annyang) {
         const commands = {
-                    'repeat': function() {
+             'repeat': function() {
                 console.log('Repeat command triggered');
                 if (calculationHistory.length > 0) {
-                    const lastMils = calculationHistory[0].mils;
+                    const lastMils = calculationHistory[-1].mils;
                     console.log('Last mils:', lastMils);
                     speakMils(lastMils);
                 } else {
@@ -627,7 +627,7 @@
             'previous': function() {
                 console.log('Previous command triggered');
                 if (calculationHistory.length > 1) {
-                    const previousMils = calculationHistory[1].mils;
+                    const previousMils = calculationHistory[-2].mils;
                     console.log('Previous mils:', previousMils);
                     speakMils(previousMils);
                 } else {
