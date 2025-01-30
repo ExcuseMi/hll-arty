@@ -377,7 +377,7 @@ function initSettings() {
 	voiceSelect.value = audioSettings.voice;
 
 	// Initialize Web Speech voices
-	initWebSpeechVoices();
+	//initWebSpeechVoices();
 }
 
 // Initialize Web Speech API voices
@@ -579,11 +579,7 @@ function speak(text) {
 		} 
 		// Fallback to Web Speech API
 		else if ('speechSynthesis' in window) {
-			const utterance = new SpeechSynthesisUtterance(text);
-			const voices = speechSynthesis.getVoices();
-			const voice = voices.find(v => v.name === audioSettings.voice);
-			
-			if (voice) utterance.voice = voice;
+			const utterance = new SpeechSynthesisUtterance(text);			
 			utterance.volume = audioSettings.volume;
 			utterance.rate = audioSettings.rate;
 			utterance.pitch = audioSettings.pitch;
@@ -613,7 +609,7 @@ if (annyang) {
                 if (audioEnabled) {
                     speak('Russian faction selected');
                 }
-            } else if (teamLower === 'standard' || ['us', 'uk', 'german'].includes(teamLower)) {
+            } else if (teamLower === 'standard' || ['us', 'uk', 'german', 'axis'].includes(teamLower)) {
                 currentFaction = 'standard';
                 updateFactionUI('standard');
                 if (audioEnabled) {
@@ -638,17 +634,19 @@ if (annyang) {
 
     annyang.addCommands(commands);
 
-    // Start button handler
-    document.getElementById('startBtn').addEventListener('click', async () => {
-        if (!micPermissionGranted) {
-            const permitted = await requestMicrophonePermission();
-            if (!permitted) return;
-        }
-
-        annyang.start({ autoRestart: true, continuous: true });
-        document.getElementById('status').textContent = 'Status: Listening';
-        updateButtonStates(true);
-    });
+	document.getElementById('startBtn').addEventListener('click', async () => {
+		if (!micPermissionGranted) {
+			const permitted = await requestMicrophonePermission();
+			if (!permitted) {
+				console.error('Microphone permission is not granted.');
+				return;
+			}
+		}
+		
+		annyang.start({ autoRestart: true, continuous: true });
+		document.getElementById('status').textContent = 'Status: Listening';
+		updateButtonStates(true);
+	});
 
     // Stop button handler
     document.getElementById('stopBtn').addEventListener('click', () => {
