@@ -196,10 +196,91 @@
             color: #ff4444;
         }
         .settings-panel {
-            background: #333;
-            padding: 20px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .settings-panel.collapsed {
+            max-height: 60px;
+        }
+
+        .settings-toggle {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            padding: 15px;
+            background: #3a3a3a;
             border-radius: 4px;
-            margin-top: 20px;
+        }
+
+        .settings-toggle h3 {
+            margin: 0;
+        }
+
+        .settings-toggle::after {
+            content: '▼';
+            transition: transform 0.3s;
+        }
+
+        .settings-toggle.collapsed::after {
+            transform: rotate(-90deg);
+        }
+
+        .voice-select-wrapper {
+            position: relative;
+            background: #444;
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .voice-select-wrapper::after {
+            content: '▼';
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            pointer-events: none;
+            color: #ccc;
+        }
+
+        #voiceSelect {
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 5px 30px 5px 10px;
+            font-size: 1em;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        .history-mils {
+            color: #4CAF50;
+            font-weight: bold;
+            font-size: 1.1em;
+            text-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+        }
+
+        .history-item {
+            position: relative;
+        }
+
+        .history-item:hover::after {
+            content: attr(data-timestamp);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            white-space: nowrap;
+            pointer-events: none;
         }
         .settings-group {
             margin: 15px 0;
@@ -278,7 +359,9 @@
         </div>
 
         <div class="settings-panel">
-            <h3>Audio Settings</h3>
+            <div class="settings-toggle" onclick="toggleSettings()">
+                <h3>Audio Settings</h3>
+            </div>
             <div class="settings-group">
                 <label>
                     <input id="audioEnabled" type="checkbox"> Audio Enabled
@@ -373,14 +456,16 @@
         document.getElementById('pitchSlider').value = audioSettings.pitch;
         updateSliderValues();
 
+
         const voiceSelect = document.getElementById('voiceSelect');
-        rvVoices.forEach(voice => {
-            const option = document.createElement('option');
-            option.value = voice;
-            option.textContent = voice;
-            voiceSelect.appendChild(option);
-        });
-        voiceSelect.value = audioSettings.voice;
+        voiceSelect.innerHTML = rvVoices.map(voice => `
+            <option value="${voice}" ${voice === audioSettings.voice ? 'selected' : ''}>
+                ${voice}
+            </option>
+        `).join('');
+
+        // Add nicer styling to the select
+        voiceSelect.parentElement.classList.add('voice-select-wrapper');
     }
 
     function updateSliderValues() {
@@ -497,29 +582,56 @@
             return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
         }
     }
+    function toggleSettings() {
+        const panel = document.querySelector('.settings-panel');
+        const toggle = document.querySelector('.settings-toggle');
+        panel.classList.toggle('collapsed');
+        toggle.classList.toggle('collapsed');
+    }
+
+    function updateHistoryTimestamps() {
+        const historyItems = document.querySelectorAll('.history-item');
+        historyItems.forEach(item => {
+            const timestamp = item.getAttribute('data-timestamp');
+            const relativeTime = getRelativeTime(timestamp);
+            item.querySelector('.history-timestamp').textContent = relativeTime;
+        });
+    }
+
+    // Update the addToHistory function
     function addToHistory(meters, mils, faction) {
-        const capitalizedFaction = faction.charAt(0).toUpperCase() + faction.slice(1); // Capitalize the first letter
+        const capitalizedFaction = faction.charAt(0).toUpperCase() + faction.slice(1);
+        const timestamp = new Date().toISOString();
+
         calculationHistory.unshift({
             meters,
             mils,
-            faction: capitalizedFaction, // Use the capitalized faction
-            timestamp: new Date() // Store the actual timestamp
+            faction: capitalizedFaction,
+            timestamp
         });
+
         if (calculationHistory.length > 10) calculationHistory.pop();
         updateHistoryUI();
         saveSettings();
     }
 
+    // Update the updateHistoryUI function
     function updateHistoryUI() {
         const historyList = document.getElementById('historyList');
         historyList.innerHTML = calculationHistory.map(item => `
-            <div class="history-item">
+            <div class="history-item" data-timestamp="${item.timestamp}">
                 <span class="history-faction">${getFactionIcon(item.faction)} ${item.faction}</span>
-                <span class="history-calculation">${item.meters}m = ${item.mils} mils</span>
+                <span class="history-calculation">
+                    ${item.meters}m = <span class="history-mils">${item.mils} mils</span>
+                </span>
                 <span class="history-timestamp">${getRelativeTime(item.timestamp)}</span>
             </div>
         `).join('');
     }
+
+    // Initialize the interval for updating timestamps
+    setInterval(updateHistoryTimestamps, 60000); // Update every minute
+
 
     function getFactionIcon(faction) {
         switch (faction.toLowerCase()) {
