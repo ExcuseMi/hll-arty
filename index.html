@@ -404,6 +404,77 @@
         speakMils(mils);
         return mils;
     }
+    // Load settings and history from localStorage
+    function loadSettings() {
+        const savedFaction = localStorage.getItem('currentFaction');
+        const savedAudioEnabled = localStorage.getItem('audioEnabled');
+        const savedHistory = localStorage.getItem('calculationHistory');
+
+        if (savedFaction) currentFaction = savedFaction;
+        if (savedAudioEnabled) audioEnabled = JSON.parse(savedAudioEnabled);
+        if (savedHistory) calculationHistory = JSON.parse(savedHistory);
+
+        updateFactionUI(currentFaction);
+        updateHistoryUI();
+    }
+
+    // Save settings and history to localStorage
+    function saveSettings() {
+        localStorage.setItem('currentFaction', currentFaction);
+        localStorage.setItem('audioEnabled', JSON.stringify(audioEnabled));
+        localStorage.setItem('calculationHistory', JSON.stringify(calculationHistory));
+
+        audioSettings.enabled = document.getElementById('audioEnabled').checked;
+        audioSettings.voice = document.getElementById('voiceSelect').value;
+        audioSettings.volume = parseFloat(document.getElementById('volumeSlider').value) / 100;
+        audioSettings.rate = parseFloat(document.getElementById('rateSlider').value);
+        audioSettings.pitch = parseFloat(document.getElementById('pitchSlider').value);
+
+        localStorage.setItem('audioSettings', JSON.stringify(audioSettings));
+
+    }
+
+    // Clear history
+    function clearHistory() {
+        calculationHistory = [];
+        updateHistoryUI();
+        saveSettings();
+    }
+
+    // Update faction UI
+    function updateFactionUI(faction) {
+        document.getElementById('standardFaction').classList.remove('active');
+        document.getElementById('russianFaction').classList.remove('active');
+        if (faction === 'standard') {
+            document.getElementById('standardFaction').classList.add('active');
+        } else {
+            document.getElementById('russianFaction').classList.add('active');
+        }
+    }
+
+    // Add to history
+    function addToHistory(meters, mils, faction) {
+        calculationHistory.unshift({
+            meters,
+            mils,
+            faction,
+            timestamp: new Date().toLocaleTimeString()
+        });
+        if (calculationHistory.length > 10) calculationHistory.pop();
+        updateHistoryUI();
+        saveSettings();
+    }
+
+    // Update history UI
+    function updateHistoryUI() {
+        const historyHTML = calculationHistory.map(item => `
+            <div class="history-item">
+                <span>${item.timestamp} - ${item.faction}</span>
+                <span>${item.meters}m = ${item.mils} mils</span>
+            </div>
+        `).join('');
+        document.getElementById('historyList').innerHTML = historyHTML;
+    }
 
     function speakMils(mils) {
         if (!audioSettings.enabled) return;
