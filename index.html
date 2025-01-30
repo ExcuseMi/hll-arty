@@ -57,6 +57,25 @@
             background: #555;
             text-align: center;
         }
+		.control-button {
+			background: #4CAF50;
+			color: white;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 4px;
+			cursor: pointer;
+			margin: 5px;
+			transition: background 0.3s;
+		}
+
+		.control-button:disabled {
+			background: #777;
+			cursor: not-allowed;
+		}
+
+		.control-button.active {
+			background: #45a049;
+		}
         .history {
             margin-top: 20px;
             background: #333;
@@ -167,12 +186,13 @@
         <div class="calculator">
             <h1>Hell Let Loose Artillery Calculator</h1>
             
-            <div class="control-panel">
-                <button id="startBtn">Start Voice</button>
-                <button id="stopBtn" disabled=true>Stop Voice</button>
-				<button id="audioBtn">Sound enabled</button>
+			<div class="control-panel">
+				<button id="startBtn" class="control-button">Start Voice</button>
+				<button id="stopBtn" class="control-button" disabled>Stop Voice</button>
+				<button id="audioBtn" class="control-button">Sound enabled</button>
+				<button id="clearHistoryBtn" class="control-button">Clear History</button>
+			</div>
 
-            </div>
             
             <div class="status" id="status">Status: Not listening</div>
             
@@ -244,246 +264,273 @@
     </div>
 
     <script>
-	let currentFaction = 'standard';
-	let calculationHistory = [];
-	let micPermissionGranted = false;
-	let audioEnabled = true;
+let currentFaction = 'standard';
+let calculationHistory = [];
+let micPermissionGranted = false;
+let audioEnabled = true;
 
-	// Standard conversion for US, UK, and German forces
-	const standardConversion = (meters) => {
-		const A = 1001.465;
-		const B = -0.2371;
-		return Math.round(A + (B * meters));
-	};
+// Load settings and history from localStorage
+function loadSettings() {
+    const savedFaction = localStorage.getItem('currentFaction');
+    const savedAudioEnabled = localStorage.getItem('audioEnabled');
+    const savedHistory = localStorage.getItem('calculationHistory');
 
-	// Russian conversion
-	const russianConversion = (meters) => {
-		const A = 1120;
-		const B = 21.33;
-		const L = 100;
-		return Math.round(A - (((meters / L) - 1) * B));
-	};
+    if (savedFaction) currentFaction = savedFaction;
+    if (savedAudioEnabled) audioEnabled = JSON.parse(savedAudioEnabled);
+    if (savedHistory) calculationHistory = JSON.parse(savedHistory);
 
-	// Update faction UI
-	function updateFactionUI(faction) {
-		document.getElementById('standardFaction').classList.remove('active');
-		document.getElementById('russianFaction').classList.remove('active');
-		if (faction === 'standard') {
-			document.getElementById('standardFaction').classList.add('active');
-		} else {
-			document.getElementById('russianFaction').classList.add('active');
-		}
-	}
+    updateFactionUI(currentFaction);
+    updateHistoryUI();
+    document.getElementById('audioBtn').textContent = audioEnabled ? 'Sound enabled' : 'Sound disabled';
+}
 
-	// Add to history
-	function addToHistory(meters, mils, faction) {
-		calculationHistory.unshift({
-			meters,
-			mils,
-			faction,
-			timestamp: new Date().toLocaleTimeString()
-		});
-		if (calculationHistory.length > 10) calculationHistory.pop();
-		updateHistoryUI();
-	}
+// Save settings and history to localStorage
+function saveSettings() {
+    localStorage.setItem('currentFaction', currentFaction);
+    localStorage.setItem('audioEnabled', JSON.stringify(audioEnabled));
+    localStorage.setItem('calculationHistory', JSON.stringify(calculationHistory));
+}
 
-	// Update history UI
-	function updateHistoryUI() {
-		const historyHTML = calculationHistory.map(item => `
-			<div class="history-item">
-				<span>${item.timestamp} - ${item.faction}</span>
-				<span>${item.meters}m = ${item.mils} mils</span>
-			</div>
-		`).join('');
-		document.getElementById('historyList').innerHTML = historyHTML;
-	}
+// Clear history
+function clearHistory() {
+    calculationHistory = [];
+    updateHistoryUI();
+    saveSettings();
+}
 
-	// Calculate mils
-	function calculateMils(meters) {
-		if (isNaN(meters) || meters < 0) return null;
+// Update faction UI
+function updateFactionUI(faction) {
+    document.getElementById('standardFaction').classList.remove('active');
+    document.getElementById('russianFaction').classList.remove('active');
+    if (faction === 'standard') {
+        document.getElementById('standardFaction').classList.add('active');
+    } else {
+        document.getElementById('russianFaction').classList.add('active');
+    }
+}
 
-		let mils;
-		if (currentFaction === 'russian') {
-			mils = russianConversion(meters);
-		} else {
-			mils = standardConversion(meters);
-		}
+// Add to history
+function addToHistory(meters, mils, faction) {
+    calculationHistory.unshift({
+        meters,
+        mils,
+        faction,
+        timestamp: new Date().toLocaleTimeString()
+    });
+    if (calculationHistory.length > 10) calculationHistory.pop();
+    updateHistoryUI();
+    saveSettings();
+}
 
-		document.getElementById('conversion').textContent = `${meters} meters = ${mils} mils`;
-		addToHistory(meters, mils, currentFaction);
+// Update history UI
+function updateHistoryUI() {
+    const historyHTML = calculationHistory.map(item => `
+        <div class="history-item">
+            <span>${item.timestamp} - ${item.faction}</span>
+            <span>${item.meters}m = ${item.mils} mils</span>
+        </div>
+    `).join('');
+    document.getElementById('historyList').innerHTML = historyHTML;
+}
 
-		if (audioEnabled && 'speechSynthesis' in window) {
-			speak(`${mils} mils`);
-		}
+// Calculate mils
+function calculateMils(meters) {
+    if (isNaN(meters) || meters < 0) return null;
 
-		return mils;
-	}
+    let mils;
+    if (currentFaction === 'russian') {
+        mils = russianConversion(meters);
+    } else {
+        mils = standardConversion(meters);
+    }
 
-	// Request microphone permission
-	async function requestMicrophonePermission() {
-		try {
-			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-			micPermissionGranted = true;
-			stream.getTracks().forEach(track => track.stop());
-			return true;
-		} catch (err) {
-			console.error('Microphone permission denied:', err);
-			document.getElementById('status').textContent = 'Status: Microphone access denied';
-			document.getElementById('startBtn').disabled = true;
-			return false;
-		}
-	}
+    document.getElementById('conversion').textContent = `${meters} meters = ${mils} mils`;
+    addToHistory(meters, mils, currentFaction);
 
-	// Update button states
-	function updateButtonStates(isListening) {
-		document.getElementById('startBtn').disabled = isListening;
-		document.getElementById('stopBtn').disabled = !isListening;
-	}
+    if (audioEnabled && 'speechSynthesis' in window) {
+        speak(`${mils} mils`);
+    }
 
-	// Setup keyboard input
-	document.getElementById('calculateBtn').addEventListener('click', () => {
-		const meters = parseInt(document.getElementById('metersInput').value);
-		calculateMils(meters);
-	});
+    return mils;
+}
 
-	document.getElementById('metersInput').addEventListener('keypress', (e) => {
-		if (e.key === 'Enter') {
-			const meters = parseInt(e.target.value);
-			calculateMils(meters);
-		}
-	});
+// Request microphone permission
+async function requestMicrophonePermission() {
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        micPermissionGranted = true;
+        stream.getTracks().forEach(track => track.stop());
+        return true;
+    } catch (err) {
+        console.error('Microphone permission denied:', err);
+        document.getElementById('status').textContent = 'Status: Microphone access denied';
+        document.getElementById('startBtn').disabled = true;
+        return false;
+    }
+}
 
-	// Faction selection
-	document.getElementById('standardFaction').addEventListener('click', () => {
-		currentFaction = 'standard';
-		updateFactionUI('standard');
-	});
+// Update button states
+function updateButtonStates(isListening) {
+    document.getElementById('startBtn').disabled = isListening;
+    document.getElementById('stopBtn').disabled = !isListening;
+}
 
-	document.getElementById('russianFaction').addEventListener('click', () => {
-		currentFaction = 'russian';
-		updateFactionUI('russian');
-	});
+// Setup keyboard input
+document.getElementById('calculateBtn').addEventListener('click', () => {
+    const meters = parseInt(document.getElementById('metersInput').value);
+    calculateMils(meters);
+});
 
-	// Speech synthesis
-	function speak(text) {
-		if ('speechSynthesis' in window) {
-			const utterance = new SpeechSynthesisUtterance(text);
-			window.speechSynthesis.speak(utterance);
-		}
-	}
+document.getElementById('metersInput').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        const meters = parseInt(e.target.value);
+        calculateMils(meters);
+    }
+});
 
-	// Voice recognition setup
-	if (annyang) {
-		const commands = {
-			'faction *team': function(team) {
-				const teamLower = team.toLowerCase();
-				if (teamLower === 'russian') {
-					currentFaction = 'russian';
-					updateFactionUI('russian');
-					if (audioEnabled) {
-						speak('Russian faction selected');
-					}
-				} else if (teamLower === 'standard' || ['us', 'uk', 'german'].includes(teamLower)) {
-					currentFaction = 'standard';
-					updateFactionUI('standard');
-					if (audioEnabled) {
-						speak('Standard faction selected');
-					}
-				}
-			},
-			':number meters': function(number) {
-				const meters = parseInt(number);
-				calculateMils(meters);
-			},
-			':number': function(number) {
-				const meters = parseInt(number);
-				calculateMils(meters);
-			}
-		};
+// Faction selection
+document.getElementById('standardFaction').addEventListener('click', () => {
+    currentFaction = 'standard';
+    updateFactionUI('standard');
+    saveSettings();
+});
 
-		annyang.addCommands(commands);
+document.getElementById('russianFaction').addEventListener('click', () => {
+    currentFaction = 'russian';
+    updateFactionUI('russian');
+    saveSettings();
+});
 
-		// Toggle audio state
-		document.getElementById('audioBtn').addEventListener('click', () => {
-			audioEnabled = !audioEnabled;
-			document.getElementById('audioBtn').textContent = audioEnabled ? 'Sound enabled' : 'Sound disabled';
-		});
+// Speech synthesis
+function speak(text) {
+    if ('speechSynthesis' in window) {
+        const utterance = new SpeechSynthesisUtterance(text);
+        window.speechSynthesis.speak(utterance);
+    }
+}
 
-		// Start button handler
-		document.getElementById('startBtn').addEventListener('click', async () => {
-			if (!micPermissionGranted) {
-				const permitted = await requestMicrophonePermission();
-				if (!permitted) return;
-			}
+// Clear history button
+document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+    clearHistory();
+});
 
-			annyang.start({ autoRestart: true, continuous: true });
-			document.getElementById('status').textContent = 'Status: Listening';
-			updateButtonStates(true);
-		});
+// Voice recognition setup
+if (annyang) {
+    const commands = {
+        'faction *team': function(team) {
+            const teamLower = team.toLowerCase();
+            if (teamLower === 'russian') {
+                currentFaction = 'russian';
+                updateFactionUI('russian');
+                if (audioEnabled) {
+                    speak('Russian faction selected');
+                }
+            } else if (teamLower === 'standard' || ['us', 'uk', 'german'].includes(teamLower)) {
+                currentFaction = 'standard';
+                updateFactionUI('standard');
+                if (audioEnabled) {
+                    speak('Standard faction selected');
+                }
+            }
+            saveSettings();
+        },
+        ':number meters': function(number) {
+            const meters = parseInt(number);
+            calculateMils(meters);
+        },
+        ':number': function(number) {
+            const meters = parseInt(number);
+            calculateMils(meters);
+        }
+    };
 
-		// Stop button handler
-		document.getElementById('stopBtn').addEventListener('click', () => {
-			annyang.abort();
-			document.getElementById('status').textContent = 'Status: Not listening';
-			updateButtonStates(false);
-		});
+    annyang.addCommands(commands);
 
-		// Error handling
-		annyang.addCallback('error', function(err) {
-			console.error('Annyang error:', err);
-			if (err.error === 'network') {
-				document.getElementById('status').textContent = 'Status: Network error - check connection';
-			} else if (err.error === 'audio') {
-				document.getElementById('status').textContent = 'Status: Audio error - check microphone';
-				micPermissionGranted = false;
-			} else if (err.error === 'aborted') {
-				document.getElementById('status').textContent = 'Status: Recognition stopped';
-				updateButtonStates(false);
-				return;
-			} else {
-				document.getElementById('status').textContent = 'Status: Error occurred';
-			}
-			updateButtonStates(false);
-		});
+    // Toggle audio state
+    document.getElementById('audioBtn').addEventListener('click', () => {
+        audioEnabled = !audioEnabled;
+        document.getElementById('audioBtn').textContent = audioEnabled ? 'Sound enabled' : 'Sound disabled';
+        saveSettings();
+    });
 
-		// Handle successful start
-		annyang.addCallback('start', function() {
-			micPermissionGranted = true;
-			document.getElementById('status').textContent = 'Status: Listening';
-			updateButtonStates(true);
-		});
-	} else {
-		document.getElementById('startBtn').disabled = true;
-		document.getElementById('stopBtn').disabled = true;
-		document.getElementById('status').textContent = 'Voice recognition not available';
-	}
+    // Start button handler
+    document.getElementById('startBtn').addEventListener('click', async () => {
+        if (!micPermissionGranted) {
+            const permitted = await requestMicrophonePermission();
+            if (!permitted) return;
+        }
 
-	// Set initial button states
-	updateButtonStates(false);
-	document.getElementById('audioBtn').textContent = audioEnabled ? 'Sound enabled' : 'Sound disabled';
+        annyang.start({ autoRestart: true, continuous: true });
+        document.getElementById('status').textContent = 'Status: Listening';
+        updateButtonStates(true);
+    });
 
-	// Handle page visibility changes
-	document.addEventListener('visibilitychange', function() {
-		if (document.hidden) {
-			if (annyang && annyang.isListening()) {
-				document.getElementById('status').textContent = 'Status: Running in background';
-			}
-		} else {
-			if (annyang && annyang.isListening()) {
-				document.getElementById('status').textContent = 'Status: Listening';
-				updateButtonStates(true);
-			} else {
-				document.getElementById('status').textContent = 'Status: Not listening';
-				updateButtonStates(false);
-			}
-		}
-	});
+    // Stop button handler
+    document.getElementById('stopBtn').addEventListener('click', () => {
+        annyang.abort();
+        document.getElementById('status').textContent = 'Status: Not listening';
+        updateButtonStates(false);
+    });
+
+    // Error handling
+    annyang.addCallback('error', function(err) {
+        console.error('Annyang error:', err);
+        if (err.error === 'network') {
+            document.getElementById('status').textContent = 'Status: Network error - check connection';
+        } else if (err.error === 'audio') {
+            document.getElementById('status').textContent = 'Status: Audio error - check microphone';
+            micPermissionGranted = false;
+        } else if (err.error === 'aborted') {
+            document.getElementById('status').textContent = 'Status: Recognition stopped';
+            updateButtonStates(false);
+            return;
+        } else {
+            document.getElementById('status').textContent = 'Status: Error occurred';
+        }
+        updateButtonStates(false);
+    });
+
+    // Handle successful start
+    annyang.addCallback('start', function() {
+        micPermissionGranted = true;
+        document.getElementById('status').textContent = 'Status: Listening';
+        updateButtonStates(true);
+    });
+} else {
+    document.getElementById('startBtn').disabled = true;
+    document.getElementById('stopBtn').disabled = true;
+    document.getElementById('status').textContent = 'Voice recognition not available';
+}
+
+// Set initial button states
+updateButtonStates(false);
+document.getElementById('audioBtn').textContent = audioEnabled ? 'Sound enabled' : 'Sound disabled';
+
+// Load settings on page load
+loadSettings();
+
+// Handle page visibility changes
+document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+        if (annyang && annyang.isListening()) {
+            document.getElementById('status').textContent = 'Status: Running in background';
+        }
+    } else {
+        if (annyang && annyang.isListening()) {
+            document.getElementById('status').textContent = 'Status: Listening';
+            updateButtonStates(true);
+        } else {
+            document.getElementById('status').textContent = 'Status: Not listening';
+            updateButtonStates(false);
+        }
+    }
+});
 	
 
-        // Only request notification permission once
-        if ('Notification' in window && Notification.permission === 'default') {
-            Notification.requestPermission();
-        }
+// Only request notification permission once
+if ('Notification' in window && Notification.permission === 'default') {
+	Notification.requestPermission();
+}
     </script>
 </body>
 </html>
