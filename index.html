@@ -1283,6 +1283,9 @@
                 'stop transmission': async () => {
                     await stopListening();
                 },
+               'end transmission': async () => {
+                    await stopListening();
+                },
                 'repeat *followup': function (followup) {
                     followupLower = followup.toLowerCase();
                     if (['mils','mills', 'distance'].includes(followupLower)) {
