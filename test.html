@@ -776,6 +776,7 @@ class MilitaryAudioPlayer {
      */
     async playMils(mils) {
         const digits = String(mils).split('');
+        await this.playPhrase('set');
 
         // Play each digit sequentially with minimal delay
         for (const digit of digits) {
@@ -784,13 +785,13 @@ class MilitaryAudioPlayer {
         }
 
         // Play "mils"
-        await this.playAudio('digit', 'mils');
+        await this.playPhrase('over');
 
         // Stop the radio static after a short delay
         setTimeout(() => {
             this.radioStatic.pause();
             this.isPlaying = false;
-        }, 500); // Delay before stopping static to avoid abrupt cut-off
+        }, 100); // Delay before stopping static to avoid abrupt cut-off
     }
 
     /**
