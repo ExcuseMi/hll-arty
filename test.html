@@ -110,14 +110,46 @@
         background: var(--accent-hover);
     }
 
-    .history {
-        margin-top: 20px;
-        background: var(--surface);
-        padding: 15px;
-        border-radius: 4px;
-        max-height: 200px;
-        overflow-y: auto;
-    }
+.history {
+    margin-top: 20px;
+    background: var(--surface);
+    padding: 15px;
+    border-radius: 4px;
+    position: relative;
+    overflow: hidden; /* Prevent double scrollbar */
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.history-content {
+    max-height: 200px;
+    overflow-y: auto; /* Only this element should scroll */
+    padding-right: 10px;
+    margin-right: -10px; /* Compensate for padding to avoid double scrollbar */
+}
+
+.history-content::-webkit-scrollbar {
+    width: 8px; /* Adjust scrollbar width */
+}
+
+.history-content::-webkit-scrollbar-track {
+    background: #444; /* Track color */
+    border-radius: 4px;
+}
+
+.history-content::-webkit-scrollbar-thumb {
+    background: var(--accent); /* Thumb color */
+    border-radius: 4px;
+}
+
+.history-content::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-hover); /* Thumb hover color */
+}
 
     .history-item {
         padding: 10px;
@@ -472,13 +504,6 @@
         color: var(--text-secondary);
     }
 
-    .history {
-        margin-top: 20px;
-        background: var(--surface);
-        padding: 15px;
-        border-radius: 4px;
-        position: relative;
-    }
 
     .history-header {
         display: flex;
@@ -514,12 +539,6 @@
     #clearHistoryBtn:active {
         transform: translateY(0);
         box-shadow: none;
-    }
-
-    .history-content {
-        max-height: 200px;
-        overflow-y: auto;
-        padding-right: 10px;
     }
 
     /* Remove the clear history button from control-panel */
@@ -576,11 +595,13 @@
         <div class="conversion" id="conversion">Waiting for input...</div>
 
         <div class="history">
-        <div class="history-header">
-            <h3>Calculation History</h3>
-            <button class="control-button" id="clearHistoryBtn">Clear History</button>
-        </div>
-        <div class="history-content" id="historyList">
+            <div class="history-header">
+                <h3>Calculation History</h3>
+                <button class="control-button" id="clearHistoryBtn">Clear History</button>
+            </div>
+            <div class="history-content" id="historyList">
+                <!-- History items will be dynamically inserted here -->
+            </div>
         </div>
     </div>
 
@@ -975,13 +996,17 @@ class MilitaryAudioPlayer {
         toggle.classList.toggle('collapsed');
     }
 
-    function updateHistoryTimestamps() {
-        const historyItems = document.querySelectorAll('.history-item');
-        historyItems.forEach(item => {
-            const timestamp = item.getAttribute('data-timestamp');
-            const relativeTime = getRelativeTime(timestamp);
-            item.querySelector('.history-timestamp').textContent = relativeTime;
-        });
+    function updateHistoryUI() {
+        const historyList = document.getElementById('historyList');
+        historyList.innerHTML = calculationHistory.map(item => `
+            <div class="history-item" data-timestamp="${item.timestamp}">
+                <span class="history-faction">${getFactionIcon(item.faction)} ${item.faction}</span>
+                <span class="history-calculation">
+                    ${item.meters}m = <span class="history-mils">${item.mils} mils</span>
+                </span>
+                <span class="history-timestamp">${getRelativeTime(item.timestamp)}</span>
+            </div>
+        `).join('');
     }
 
     // Update the addToHistory function
