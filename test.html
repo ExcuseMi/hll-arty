@@ -552,7 +552,7 @@
                 <h3>⭐ US Forces</h3>
                 <div class="faction-list">155MM HOWITZER M114</div>
             </div>
-            <div class="faction-group" id="germanyFaction">
+            <div class="faction-group" id="germanFaction">
                 <h3>⚔️ German Forces</h3>
                 <div class="faction-list">150MM HOWITZER SFH 18</div>
             </div>
@@ -934,15 +934,15 @@ class MilitaryAudioPlayer {
     // Update updateFactionUI function
     function updateFactionUI(faction) {
         document.getElementById('usFaction').classList.remove('active');
-        document.getElementById('germanyFaction').classList.remove('active');
+        document.getElementById('germanFaction').classList.remove('active');
 
         document.getElementById('russianFaction').classList.remove('active');
         document.getElementById('britishFaction').classList.remove('active');
 
         if (faction === 'us') {
             document.getElementById('usFaction').classList.add('active');
-        } else if (faction === 'germany') {
-            document.getElementById('germanyFaction').classList.add('active');
+        } else if (faction === 'german') {
+            document.getElementById('germanFaction').classList.add('active');
         } else if (faction === 'russian') {
             document.getElementById('russianFaction').classList.add('active');
         } else if (faction === 'british') {
@@ -1067,9 +1067,9 @@ class MilitaryAudioPlayer {
         updateFactionUI('us');
         saveSettings();
     });
-    document.getElementById('germanyFaction').addEventListener('click', () => {
-        currentFaction = 'germany';
-        updateFactionUI('germany');
+    document.getElementById('germanFaction').addEventListener('click', () => {
+        currentFaction = 'german';
+        updateFactionUI('german');
         saveSettings();
     });
 
@@ -1114,11 +1114,11 @@ class MilitaryAudioPlayer {
             if (audioEnabled) {
                 speakFactionSelected('us');
             }
-        } else if (teamLower === 'germany' || ['german','axis'].includes(teamLower)) {
-            currentFaction = 'germany';
-            updateFactionUI('germany');
+        } else if (teamLower === 'german' || ['germany','axis'].includes(teamLower)) {
+            currentFaction = 'german';
+            updateFactionUI('german');
             if (audioEnabled) {
-                speakFactionSelected('germany');
+                speakFactionSelected('german');
             }
         }
         saveSettings();
