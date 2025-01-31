@@ -474,7 +474,7 @@
 
     .history {
         margin-top: 20px;
-        background: v²ar(--surface);
+        background: var(--surface);
         padding: 15px;
         border-radius: 4px;
         position: relative;
@@ -670,7 +670,7 @@ class MilitaryAudioPlayer {
         this.digitCache = new Map(); // Cache for digit audio
         this.phraseCache = new Map(); // Cache for phrase audio
         this.basePath = 'audio'; // Base path for audio files
-        this.radioStatic = new Audio('audio/radio_noise.mp3'); // Radio static effect
+        this.radioStatic = new Audio('audio/effects/radio_noise.mp3'); // Radio static effect
         this.radioStatic.volume = 0.2; // Lower volume for static
         this.volume = 1;
     }
