@@ -544,10 +544,24 @@
     .disclaimer p {
         margin: 0;
     }
+    a:hover img {
+            opacity: 0.8;
+            transform: scale(1.05);
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
 </style>
 </head>
 
 <body>
+    <div style="position: absolute; top: 20px; right: 20px;">
+        <a href="https://discord.gg/the-circle" target="_blank" rel="noopener noreferrer">
+            <img
+                alt="The Circle Logo"
+                class="h-12 w-12 rounded-md object-cover"
+                src="/images/circle-640.png"
+            />
+        </a>
+    </div>
     <div class="container">
         <div class="calculator">
             <h1>HLL Artillery Range Assistant</h1>
