@@ -1008,7 +1008,11 @@
         audioEnabledCheckbox.addEventListener('change', function () {
             saveSettings();
         });
-        document.getElementById('radioNoiseEnabled').addEventListener('change', function () {
+
+        const radioNoiseEnabledCheckbox = document.getElementById('radioNoiseEnabled');
+        radioNoiseEnabledCheckbox.checked = audioSettings.useStaticNoise;
+
+        radioNoiseEnabledCheckbox.addEventListener('change', function () {
             saveSettings();
         });
 
