@@ -1260,8 +1260,6 @@
                     document.getElementById('status').textContent = 'Status: Listening';
                     updateButtonStates(true);
 
-                    // Play the startup phrase and wait for it to finish
-                    await audioPlayer.playPhrase('startup');
                 } catch (err) {
                     console.error('Microphone permission denied:', err);
                     document.getElementById('status').textContent = 'Status: Microphone access denied';
@@ -1308,6 +1306,8 @@
                 micPermissionGranted = true;
                 document.getElementById('status').textContent = 'Status: Listening';
                 updateButtonStates(true);
+                await audioPlayer.playPhrase('startup');
+
             });
         } else {
             document.getElementById('startBtn').disabled = true;
