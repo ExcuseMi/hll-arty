@@ -52,8 +52,8 @@
                 "out_of_range": "Out of operational range",
                 "microphone_error": "Communication system failure",
                 "set": "Set.",
-                "over": "Over.",
-                "copy": "Copy."
+                "over": "Over",
+                "copy": "Copy"
 
             },
             "digits": {
@@ -86,9 +86,9 @@
                 "invalid_distance": "Invalid range, repeat",
                 "out_of_range": "Out of effective range",
                 "microphone_error": "Radio malfunction",
-                "set": "Set.",
-                "over": "Over.",
-                "copy": "Copy."
+                "set": "Set",
+                "over": "Over",
+                "copy": "Copy"
 
 
             },
@@ -122,9 +122,9 @@
                 "invalid_distance": "Invalid distance, repeat",
                 "out_of_range": "Out of operational range",
                 "microphone_error": "Communication system failure",
-                "set": "Set.",
-                "over": "Over.",
-                "copy": "Copy."
+                "set": "Set",
+                "over": "Over",
+                "copy": "Copy"
 
 
             },
