@@ -1005,9 +1005,10 @@
         const audioEnabledCheckbox = document.getElementById('audioEnabled');
         audioEnabledCheckbox.checked = audioSettings.enabled;
 
-        // Add event listener for the new checkbox
         audioEnabledCheckbox.addEventListener('change', function () {
-            audioSettings.enabled = this.checked;
+            saveSettings();
+        });
+        document.getElementById('radioNoiseEnabled').addEventListener('change', function () {
             saveSettings();
         });
 
