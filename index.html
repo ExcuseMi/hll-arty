@@ -1280,15 +1280,21 @@
         // Voice recognition setup
         if (annyang) {
             const commands = {
-                'stop transmission': async () => {
+                // Stop listening commands
+                'stop *transmission': async () => {
                     await stopListening();
                 },
-               'end transmission': async () => {
+                'end *transmission': async () => {
                     await stopListening();
                 },
+                'halt *transmission': async () => {
+                    await stopListening();
+                },
+
+                // Repeat commands
                 'repeat *followup': function (followup) {
-                    followupLower = followup.toLowerCase();
-                    if (['mils','mills', 'distance'].includes(followupLower)) {
+                    const followupLower = followup.toLowerCase().trim();
+                    if (fuzzyMatch(followupLower, ['mils', 'mills', 'distance', 'calculation'])) {
                         console.log('Repeat command triggered');
                         if (calculationHistory.length > 0) {
                             const lastMils = calculationHistory[0].mils;
@@ -1299,10 +1305,24 @@
                         }
                     }
                 },
-                'previous *followup': function (followup) {
-                    followupLower = followup.toLowerCase();
-                    if (['mils','mills', 'distance'].includes(followupLower)) {
+                'say *followup': function (followup) {
+                    const followupLower = followup.toLowerCase().trim();
+                    if (fuzzyMatch(followupLower, ['mils', 'mills', 'distance', 'calculation'])) {
+                        console.log('Repeat command triggered');
+                        if (calculationHistory.length > 0) {
+                            const lastMils = calculationHistory[0].mils;
+                            console.log('Last mils:', lastMils);
+                            speakMils(lastMils);
+                        } else {
+                            console.log('No history to repeat');
+                        }
+                    }
+                },
 
+                // Previous commands
+                'previous *followup': function (followup) {
+                    const followupLower = followup.toLowerCase().trim();
+                    if (fuzzyMatch(followupLower, ['mils', 'mills', 'distance', 'calculation'])) {
                         console.log('Previous command triggered');
                         if (calculationHistory.length > 1) {
                             const previousMils = calculationHistory[1].mils;
@@ -1313,26 +1333,61 @@
                         }
                     }
                 },
+                'last *followup': function (followup) {
+                    const followupLower = followup.toLowerCase().trim();
+                    if (fuzzyMatch(followupLower, ['mils', 'mills', 'distance', 'calculation'])) {
+                        console.log('Previous command triggered');
+                        if (calculationHistory.length > 1) {
+                            const previousMils = calculationHistory[1].mils;
+                            console.log('Previous mils:', previousMils);
+                            speakMils(previousMils);
+                        } else {
+                            console.log('Not enough history for previous');
+                        }
+                    }
+                },
+
+                // Faction commands
                 'faction *team': function (team) {
-                    factionChange(team);
+                    const teamLower = team.toLowerCase().trim();
+                    factionChange(teamLower);
                 },
                 '*team forces': function (team) {
-                    factionChange(team);
+                    const teamLower = team.toLowerCase().trim();
+                    factionChange(teamLower);
                 },
+                'set faction *team': function (team) {
+                    const teamLower = team.toLowerCase().trim();
+                    factionChange(teamLower);
+                },
+
+                // Distance commands
                 ':number meter': function (number) {
                     const meters = parseInt(number);
-                    calculateMils(meters);
+                    if (!isNaN(meters)) calculateMils(meters);
                 },
                 ':number meters': function (number) {
                     const meters = parseInt(number);
-                    calculateMils(meters);
+                    if (!isNaN(meters)) calculateMils(meters);
                 },
                 ':number': function (number) {
                     const meters = parseInt(number);
-                    calculateMils(meters);
+                    if (!isNaN(meters)) calculateMils(meters);
+                },
+                'distance *number': function (number) {
+                    const meters = parseInt(number);
+                    if (!isNaN(meters)) calculateMils(meters);
+                },
+                'calculate *number': function (number) {
+                    const meters = parseInt(number);
+                    if (!isNaN(meters)) calculateMils(meters);
                 }
             };
-            annyang.addCommands(commands);
+
+            // Helper function for fuzzy matching
+            function fuzzyMatch(input, keywords) {
+                return keywords.some(keyword => input.includes(keyword));
+            }            annyang.addCommands(commands);
             annyang.addCallback('result', function (phrases) {
                 console.log('Recognized phrases:', phrases);
             });
