@@ -472,34 +472,9 @@
         color: var(--text-secondary);
     }
 
-    #voiceSelect {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background: var(--surface);
-        border: none;
-        color: white;
-        padding: 8px 30px 8px 12px;
-        font-size: 1em;
-        cursor: pointer;
-        width: 100%;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-    }
-
-    #voiceSelect:hover {
-        border-color: var(--accent-hover);
-    }
-
-    #voiceSelect option {
-        background: var(--surface);
-        color: white;
-        padding: 8px;
-    }
-
-        .history {
+    .history {
         margin-top: 20px;
-        background: var(--surface);
+        background: v²ar(--surface);
         padding: 15px;
         border-radius: 4px;
         position: relative;
@@ -1192,7 +1167,6 @@ class MilitaryAudioPlayer {
             updateButtonStates(false);
         });
         document.getElementById('audioEnabled').addEventListener('change', saveSettings);
-        document.getElementById('voiceSelect').addEventListener('change', saveSettings);
         document.getElementById('volumeSlider').addEventListener('input', () => {
             updateSliderValues();
             saveSettings();
