@@ -1121,26 +1121,18 @@ function getFullDateTime(timestamp) {
 
         // Faction selection
         document.getElementById('usFaction').addEventListener('click', () => {
-            currentFaction = 'us';
-            updateFactionUI('us');
-            saveSettings();
+            factionChange('us');
         });
         document.getElementById('germanFaction').addEventListener('click', () => {
-            currentFaction = 'german';
-            updateFactionUI('german');
-            saveSettings();
+            factionChange('german');
         });
 
         document.getElementById('russianFaction').addEventListener('click', () => {
-            currentFaction = 'russian';
-            updateFactionUI('russian');
-            saveSettings();
+            factionChange('russian');
         });
 
         document.getElementById('britishFaction').addEventListener('click', () => {
-            currentFaction = 'british';
-            updateFactionUI('british');
-            saveSettings();
+            factionChange('british');
         });
 
 
