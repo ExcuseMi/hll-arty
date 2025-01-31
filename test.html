@@ -1222,6 +1222,7 @@
                     annyang.start({ autoRestart: true, continuous: true });
                     document.getElementById('status').textContent = 'Status: Listening';
                     updateButtonStates(true);
+                    setTimeout(() => { audioPlayer.playPhrase('startup'); }, 500);
 
                 } catch (err) {
                     console.error('Microphone permission denied:', err);
@@ -1262,6 +1263,8 @@
                     document.getElementById('status').textContent = 'Status: Error occurred';
                 }
                 updateButtonStates(false);
+                await audioPlayer.playPhrase('startup');
+
             });
 
             // Handle successful start
@@ -1269,7 +1272,6 @@
                 micPermissionGranted = true;
                 document.getElementById('status').textContent = 'Status: Listening';
                 updateButtonStates(true);
-                await audioPlayer.playPhrase('startup');
 
             });
         } else {
