@@ -1265,7 +1265,7 @@
             });
 
             // Handle successful start
-            annyang.addCallback('start', function () {
+            annyang.addCallback('start', function async () {
                 micPermissionGranted = true;
                 document.getElementById('status').textContent = 'Status: Listening';
                 updateButtonStates(true);
