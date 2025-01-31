@@ -1037,6 +1037,7 @@
 
         function calculateMils(meters) {
             if (isNaN(meters) || meters < minMeters || meters > maxMeters) return null;
+            document.getElementById('metersInput').value = `${meters}`;
 
             let mils;
             if (currentFaction === 'russian') {
