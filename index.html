@@ -838,7 +838,7 @@
             async preloadPhrases() {
                 const phrases = [
                     'startup', 'faction_selected', 'stop_response', 'repeat', 'previous',
-                    'calculating', 'coordinates_received', 'invalid_distance', 'out_of_range', 'microphone_error'
+                    'calculating', 'coordinates_received', 'invalid_distance', 'out_of_range', 'microphone_error', 'set_target_to','set','copy'
                 ];
                 for (const phrase of phrases) {
                     await this.loadAudio(`${this.basePath}/${this.voice}/phrases/${phrase}.mp3`, this.phraseCache);
@@ -910,6 +910,8 @@
              */
             async playMils(mils) {
                 const digits = String(mils).split('');
+                // Play "mils"
+                await this.playAudio('phrase', 'set_target_to');
 
                 // Play each digit sequentially with minimal delay
                 for (const digit of digits) {
