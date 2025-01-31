@@ -740,7 +740,7 @@
                     zero zero works as well.</p>
                 <p>3. Repeat: Say "<strong>repeat mils</strong>" to hear the last calculation.</p>
                 <p>4. Previous: Say "<strong>previous mils</strong>" to hear the second-to-last calculation.</p>
-                <p>5. Stop: Say "<strong>end transmission</strong>".</p>
+                <p>5. Stop: Say "<strong>stop transmission</strong>".</p>
 
                 <p><strong>Note:</strong> For best results, use Chrome or Edge with a clear microphone</p>
             </div>
@@ -1280,27 +1280,34 @@
         // Voice recognition setup
         if (annyang) {
             const commands = {
-                'end transmission': async () => {
+                'stop transmission': async () => {
                     await stopListening();
                 },
-                'repeat mils': function () {
-                    console.log('Repeat command triggered');
-                    if (calculationHistory.length > 0) {
-                        const lastMils = calculationHistory[0].mils;
-                        console.log('Last mils:', lastMils);
-                        speakMils(lastMils);
-                    } else {
-                        console.log('No history to repeat');
+                'repeat *followup': function (followup) {
+                    followupLower = followup.toLowerCase();
+                    if (['mils','mills', 'distance'].includes(followupLower)) {
+                        console.log('Repeat command triggered');
+                        if (calculationHistory.length > 0) {
+                            const lastMils = calculationHistory[0].mils;
+                            console.log('Last mils:', lastMils);
+                            speakMils(lastMils);
+                        } else {
+                            console.log('No history to repeat');
+                        }
                     }
                 },
-                'previous mils': function () {
-                    console.log('Previous command triggered');
-                    if (calculationHistory.length > 1) {
-                        const previousMils = calculationHistory[1].mils;
-                        console.log('Previous mils:', previousMils);
-                        speakMils(previousMils);
-                    } else {
-                        console.log('Not enough history for previous');
+                'previous *followup': function (followup) {
+                    followupLower = followup.toLowerCase();
+                    if (['mils','mills', 'distance'].includes(followupLower)) {
+
+                        console.log('Previous command triggered');
+                        if (calculationHistory.length > 1) {
+                            const previousMils = calculationHistory[1].mils;
+                            console.log('Previous mils:', previousMils);
+                            speakMils(previousMils);
+                        } else {
+                            console.log('Not enough history for previous');
+                        }
                     }
                 },
                 'faction *team': function (team) {
