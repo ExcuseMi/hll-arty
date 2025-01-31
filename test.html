@@ -1222,7 +1222,6 @@
                     annyang.start({ autoRestart: true, continuous: true });
                     document.getElementById('status').textContent = 'Status: Listening';
                     updateButtonStates(true);
-                    setTimeout(() => { audioPlayer.playPhrase('startup'); }, 500);
 
                 } catch (err) {
                     console.error('Microphone permission denied:', err);
@@ -1240,6 +1239,8 @@
                 annyang.abort();
                 document.getElementById('status').textContent = 'Status: Not listening';
                 updateButtonStates(false);
+                setTimeout(() => { audioPlayer.playPhrase('startup'); }, 500);
+
             });
             document.getElementById('audioEnabled').addEventListener('change', saveSettings);
             document.getElementById('volumeSlider').addEventListener('input', () => {
@@ -1263,7 +1264,6 @@
                     document.getElementById('status').textContent = 'Status: Error occurred';
                 }
                 updateButtonStates(false);
-                await audioPlayer.playPhrase('startup');
 
             });
 
