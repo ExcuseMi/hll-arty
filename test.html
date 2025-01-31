@@ -1178,6 +1178,7 @@ class MilitaryAudioPlayer {
                 annyang.start({ autoRestart: true, continuous: true });
                 document.getElementById('status').textContent = 'Status: Listening';
                 updateButtonStates(true);
+                await audioPlayer.playPhrase('startup');
             } catch (err) {
                 console.error('Microphone permission denied:', err);
                 document.getElementById('status').textContent = 'Status: Microphone access denied';
@@ -1186,10 +1187,12 @@ class MilitaryAudioPlayer {
         });
 
         // Stop button handler
-        document.getElementById('stopBtn').addEventListener('click', () => {
+        document.getElementById('stopBtn').addEventListener('click', async () => {
             annyang.abort();
             document.getElementById('status').textContent = 'Status: Not listening';
             updateButtonStates(false);
+            await audioPlayer.playPhrase('stop_response');
+
         });
         document.getElementById('audioEnabled').addEventListener('change', saveSettings);
         document.getElementById('volumeSlider').addEventListener('input', () => {
