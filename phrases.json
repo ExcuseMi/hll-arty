@@ -18,8 +18,8 @@
                 "microphone_error": "Radio malfunction",
                 "set": "Set.",
                 "over": "Over.",
-                "copy": "Copy."
-
+                "copy": "Copy",
+                "set_target_to": "Set target to "
             },
             "digits": {
                 "0": "zero",
@@ -53,7 +53,10 @@
                 "microphone_error": "Communication system failure",
                 "set": "Set.",
                 "over": "Over",
-                "copy": "Copy"
+                "copy": "Copy",
+
+                "set_target_to": "Set target to "
+
 
             },
             "digits": {
@@ -72,7 +75,8 @@
         },
         "british": {
             "name": "British Artillery",
-            "voice_id": "UlQzP061AqptrSLuYnFf",
+            "voice_id": "nOf9AoLGhnavTkTkzw6e",
+            "voice_name": "Nigel - Mysterious Intriguing",
             "icon": "🇬🇧",
             "accent": "british",
             "phrases": {
@@ -88,7 +92,8 @@
                 "microphone_error": "Radio malfunction",
                 "set": "Set",
                 "over": "Over",
-                "copy": "Copy"
+                "copy": "Copy",
+                "set_target_to": "Set target to "
 
 
             },
@@ -124,7 +129,8 @@
                 "microphone_error": "Communication system failure",
                 "set": "Set",
                 "over": "Over",
-                "copy": "Copy"
+                "copy": "Copy",
+                "set_target_to": "Set target to "
 
 
             },
