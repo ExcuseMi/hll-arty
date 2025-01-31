@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -31,7 +32,7 @@
         background: var(--background);
         padding: 20px;
         border-radius: 8px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     .status {
@@ -41,9 +42,10 @@
         background: var(--surface);
     }
 
+    /* Faction Selector */
     .faction-selector {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 10px;
         margin: 15px 0;
     }
@@ -55,20 +57,12 @@
         cursor: pointer;
         transition: all 0.3s;
         border: 2px solid transparent;
-    }
-
-    .faction-group:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    }
-
-    .faction-group.active {
-        background: var(--accent);
-        border-color: var(--accent-hover);
+        text-align: center;
     }
 
     .faction-group h3 {
         margin: 0 0 10px 0;
+        font-size: 1.1em;
     }
 
     .faction-list {
@@ -76,6 +70,17 @@
         color: var(--text-secondary);
     }
 
+    .faction-group:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .faction-group.active {
+        background: var(--accent);
+        border-color: var(--accent-hover);
+    }
+
+    /* Conversion Display */
     .conversion {
         font-size: 28px;
         font-weight: bold;
@@ -83,11 +88,12 @@
         margin: 20px 0;
         background: linear-gradient(145deg, var(--accent), var(--accent-hover));
         color: white;
-        text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
         border-radius: 8px;
         text-align: center;
     }
 
+    /* Buttons */
     .control-button {
         background: var(--accent);
         color: white;
@@ -108,71 +114,71 @@
         background: var(--accent-hover);
     }
 
-    .history {
-        margin-top: 20px;
-        background: var(--surface);
-        padding: 15px;
-        border-radius: 4px;
-        max-height: 200px;
-        overflow-y: auto;
-    }
-
-    .history-item {
-        padding: 10px;
-        border-bottom: 1px solid #444;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: background 0.3s;
-        position: relative;
-    }
-
-    .history-item:hover {
-        background: #444;
-    }
-
-    .history-faction {
-        font-weight: bold;
-        color: var(--accent);
-    }
-
-    .history-calculation {
-        color: var(--text-secondary);
-    }
-
-    .history-mils {
-        color: var(--accent);
-        font-weight: bold;
-        font-size: 1.1em;
-        text-shadow: 0 0 5px rgba(0, 188, 212, 0.3);
-    }
-
-    .history-timestamp {
-        font-size: 0.8em;
-        color: #888;
-        font-style: italic;
-    }
-
-    .history-item:hover::after {
-        content: attr(data-timestamp);
-        position: absolute;
-        bottom: 100%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.8);
+    #calculateBtn {
+        background: var(--accent);
         color: white;
-        padding: 5px 10px;
+        border: none;
+        padding: 0 20px;
         border-radius: 4px;
-        font-size: 0.8em;
-        white-space: nowrap;
-        pointer-events: none;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        min-width: 120px;
     }
 
-    .commands {
-        background: var(--surface);
-        padding: 15px;
+    #calculateBtn:hover {
+        background: var(--accent-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    #calculateBtn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    #clearHistoryBtn {
+        background: #ff4444;
+        color: white;
+        border: none;
+        padding: 8px 16px;
         border-radius: 4px;
-        margin-top: 20px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    #clearHistoryBtn:hover {
+        background: #cc0000;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    #clearHistoryBtn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+    /* Input Section */
+    .input-section {
+        margin: 20px 0;
+        padding: 20px;
+        background: var(--surface);
+        border-radius: 4px;
+        text-align: center;
+    }
+
+    .input-group {
+        display: flex;
+        gap: 10px;
+        width: 100%;
+        max-width: 600px;
+        margin: 20px auto;
+        align-items: stretch;
     }
 
     input[type="number"] {
@@ -193,82 +199,104 @@
         margin: 0;
     }
 
-    .input-section {
-        margin: 20px 0;
-        padding: 20px;
-        background: var(--surface);
-        border-radius: 4px;
-        text-align: center;
-    }
-
-    .input-group {
-        display: flex;
-        gap: 10px;
-        width: 100%;
-        max-width: 600px;
-        margin: 20px auto;
-        align-items: stretch;
-    }
-
-    #calculateBtn {
-        background: var(--accent);
-        color: white;
-        border: none;
-        padding: 0 20px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-weight: bold;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        min-width: 120px;
-    }
-
-    #calculateBtn:hover {
-        background: var(--accent-hover);
-        transform: translateY(-1px);
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    #calculateBtn:active {
-        transform: translateY(0);
-        box-shadow: none;
-    }
-
-    .voice-info {
+    /* History Section */
+    .history {
+        margin-top: 20px;
         background: var(--surface);
         padding: 15px;
         border-radius: 4px;
-        margin: 20px 0;
+        position: relative;
+        overflow: hidden;
     }
 
-    .voice-info h3 {
-        color: var(--accent);
-        margin-bottom: 10px;
+    .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
     }
 
-    .browser-support {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-        gap: 10px;
-        margin-top: 10px;
+    .history-content {
+        max-height: 200px;
+        overflow-y: auto;
+        padding-right: 10px;
+        margin-right: -10px;
     }
 
-    .browser-item {
-        background: var(--surface);
-        padding: 10px;
+    .history-content::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .history-content::-webkit-scrollbar-track {
+        background: #444;
         border-radius: 4px;
-        text-align: center;
     }
 
-    .supported {
+    .history-content::-webkit-scrollbar-thumb {
+        background: var(--accent);
+        border-radius: 4px;
+    }
+
+    .history-content::-webkit-scrollbar-thumb:hover {
+        background: var(--accent-hover);
+    }
+
+    .history-item {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        border-bottom: 1px solid #444;
+        transition: background 0.3s;
+        position: relative;
+    }
+
+    .history-item:hover {
+        background: #444;
+    }
+
+    .history-faction {
+        font-weight: bold;
         color: var(--accent);
+        text-align: left;
     }
 
-    .unsupported {
-        color: #ff4444;
+    .history-calculation {
+        text-align: center;
+        color: var(--text-secondary);
     }
 
+    .history-mils {
+        color: var(--accent);
+        font-weight: bold;
+        font-size: 1.1em;
+        text-shadow: 0 0 5px rgba(0, 188, 212, 0.3);
+    }
+
+    .history-timestamp {
+        text-align: right;
+        font-size: 0.8em;
+        color: #888;
+        font-style: italic;
+    }
+
+    .history-item:hover::after {
+        content: attr(data-timestamp);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        white-space: nowrap;
+        pointer-events: none;
+    }
+
+    /* Settings Panel */
     .settings-panel {
         background: var(--surface);
         padding: 20px;
@@ -364,7 +392,7 @@
         position: relative;
         top: 50%;
         transform: translateY(-50%);
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     input[type="range"]::-moz-range-thumb {
@@ -375,7 +403,7 @@
         cursor: pointer;
         transition: all 0.3s ease;
         position: relative;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     }
 
     input[type="range"]::-webkit-slider-runnable-track {
@@ -426,11 +454,11 @@
         transition: all 0.3s ease;
     }
 
-    .checkbox-group:hover input ~ .checkmark {
+    .checkbox-group:hover input~.checkmark {
         border-color: var(--accent-hover);
     }
 
-    .checkbox-group input:checked ~ .checkmark {
+    .checkbox-group input:checked~.checkmark {
         background-color: var(--accent);
         border-color: var(--accent);
     }
@@ -448,104 +476,46 @@
         transform: rotate(45deg);
     }
 
-    .checkbox-group input:checked ~ .checkmark:after {
+    .checkbox-group input:checked~.checkmark:after {
         display: block;
     }
 
-    .voice-select-wrapper {
-        position: relative;
-        background: #444;
-        border-radius: 4px;
-        padding: 8px;
-        border: 1px solid var(--accent);
-    }
-
-    .voice-select-wrapper::after {
-        content: '▼';
-        position: absolute;
-        right: 15px;
-        top: 50%;
-        transform: translateY(-50%);
-        pointer-events: none;
-        color: var(--text-secondary);
-    }
-
-    #voiceSelect {
-        appearance: none;
-        -webkit-appearance: none;
-        -moz-appearance: none;
-        background: var(--surface);
-        border: none;
-        color: white;
-        padding: 8px 30px 8px 12px;
-        font-size: 1em;
-        cursor: pointer;
-        width: 100%;
-        border-radius: 4px;
-        transition: all 0.3s ease;
-    }
-
-    #voiceSelect:hover {
-        border-color: var(--accent-hover);
-    }
-
-    #voiceSelect option {
-        background: var(--surface);
-        color: white;
-        padding: 8px;
-    }
-
-        .history {
-        margin-top: 20px;
+    /* Voice Info Section */
+    .voice-info {
         background: var(--surface);
         padding: 15px;
         border-radius: 4px;
-        position: relative;
+        margin: 20px 0;
     }
 
-    .history-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 15px;
+    .voice-info h3 {
+        color: var(--accent);
+        margin-bottom: 10px;
     }
 
-
-    .history-header h3 {
-        margin: 0;
+    .browser-support {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 10px;
+        margin-top: 10px;
     }
 
-    #clearHistoryBtn {
-        background: #ff4444;
-        color: white;
-        border: none;
-        padding: 8px 16px;
+    .browser-item {
+        background: var(--surface);
+        padding: 10px;
         border-radius: 4px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.9em;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
+        text-align: center;
     }
 
-    #clearHistoryBtn:hover {
-        background: #cc0000;
-        transform: translateY(-1px);
-        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    .supported {
+        color: var(--accent);
     }
 
-    #clearHistoryBtn:active {
-        transform: translateY(0);
-        box-shadow: none;
+    .unsupported {
+        color: #ff4444;
     }
 
-    .history-content {
-        max-height: 200px;
-        overflow-y: auto;
-        padding-right: 10px;
-    }
-
-    /* Remove the clear history button from control-panel */
+    /* Control Panel */
     .control-panel {
         display: flex;
         gap: 10px;
@@ -557,61 +527,63 @@
     }
 </style>
 </head>
+
 <body>
-<div class="container">
-    <div class="calculator">
-        <h1>Hell Let Loose Artillery Calculator</h1>
+    <div class="container">
+        <div class="calculator">
+            <h1>Hell Let Loose Artillery Calculator</h1>
 
-        <div class="control-panel">
-            <button class="control-button" id="startBtn">Start Voice</button>
-            <button class="control-button" disabled id="stopBtn">Stop Voice</button>
+            <div class="control-panel">
+                <button class="control-button" id="startBtn">Start Voice</button>
+                <button class="control-button" disabled id="stopBtn">Stop Voice</button>
 
-            <button class="control-button" id="enableNotificationsBtn">Enable Notifications</button>
-        </div>
-        <div class="status" id="status">Status: Not listening</div>
+                <button class="control-button" id="enableNotificationsBtn">Enable Notifications</button>
+            </div>
+            <div class="status" id="status">Status: Not listening</div>
 
-        <div class="faction-selector">
-            <div class="faction-group active" id="standardFaction">
-                <h3>Standard Forces</h3>
-                <div class="faction-list">
-                    • US Forces<br>
-                    • German Forces
+            <div class="faction-selector">
+                <div class="faction-group active" id="usFaction">
+                    <h3>⭐ US Forces</h3>
+                    <div class="faction-list">155MM HOWITZER M114</div>
+                </div>
+                <div class="faction-group" id="germanFaction">
+                    <h3>⚔️ German Forces</h3>
+                    <div class="faction-list">150MM HOWITZER SFH 18</div>
+                </div>
+                <div class="faction-group" id="russianFaction">
+                    <h3>🇷🇺 Russian Forces</h3>
+                    <div class="faction-list">M122MM HOWITZER 1938 (M-30)</div>
+                </div>
+                <div class="faction-group" id="britishFaction">
+                    <h3>🇬🇧 British Forces</h3>
+                    <div class="faction-list">QF 25-POUNDER</div>
                 </div>
             </div>
-            <div class="faction-group" id="russianFaction">
-                <h3>Russian Forces</h3>
-                <div class="faction-list">
-                    • Different artillery calculation<br>
-                    • Specific elevation formula
+            <div class="input-section">
+                <h3>Enter Distance</h3>
+                <div class="input-group">
+                    <input id="metersInput" max="1600" min="100" placeholder="Enter distance in meters" type="number">
+                    <button id="calculateBtn" class="control-button">Calculate</button>
                 </div>
             </div>
-            <div class="faction-group" id="britishFaction">
-                <h3>British Forces</h3>
-                <div class="faction-list">
-                    • QF 25-pounder gun<br>
-                    • Specific calculation
+
+            <div class="conversion" id="conversion">Waiting for input...</div>
+
+            <div class="history">
+                <div class="history-header">
+                    <h3>Calculation History</h3>
+                    <button class="control-button" id="clearHistoryBtn">Clear History</button>
+                </div>
+                <div class="history-content" id="historyList">
+                    <!-- Example history item -->
+                    <div class="history-item" data-timestamp="2023-10-01T12:00:00Z">
+                        <span class="history-faction">⭐ US Forces</span>
+                        <span class="history-calculation">400m = <span class="history-mils">1200 mils</span></span>
+                        <span class="history-timestamp">2 minutes ago</span>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <div class="input-section">
-            <h3>Enter Distance</h3>
-            <div class="input-group">
-                <input id="metersInput" max="1600" min="100" placeholder="Enter distance in meters" type="number">
-                <button id="calculateBtn" class="control-button">Calculate</button>
-            </div>
-        </div>
-
-        <div class="conversion" id="conversion">Waiting for input...</div>
-
-        <div class="history">
-        <div class="history-header">
-            <h3>Calculation History</h3>
-            <button class="control-button" id="clearHistoryBtn">Clear History</button>
-        </div>
-        <div class="history-content" id="historyList">
-        </div>
-    </div>
 
         <div class="settings-panel">
             <div class="settings-toggle" onclick="toggleSettings()">
@@ -625,27 +597,20 @@
                         Audio Enabled
                     </label>
                 </div>
+                <div class="settings-group">
+                    <label class="checkbox-group">
+                        <input id="radioNoiseEnabled" type="checkbox">
+                        <span class="checkmark"></span>
+                        Enable Radio Noise
+                    </label>
+                </div>
                 <div class="settings-row">
-                    <div class="settings-group">
-                        <label>Voice:</label>
-                        <div class="voice-select-wrapper">
-                            <select id="voiceSelect"></select>
-                        </div>
-                    </div>
                     <div class="settings-group slider-container">
                         <label>Volume: <span class="slider-value" id="volumeValue">100</span>%</label>
                         <input id="volumeSlider" max="100" min="0" type="range" value="100">
                         <div class="slider-labels">
                             <span>0%</span>
                             <span>100%</span>
-                        </div>
-                    </div>
-                    <div class="settings-group slider-container">
-                        <label>Speed: <span class="slider-value" id="rateValue">1.0</span></label>
-                        <input id="rateSlider" max="2" min="0.5" step="0.1" type="range" value="1">
-                        <div class="slider-labels">
-                            <span>0.5x</span>
-                            <span>2.0x</span>
                         </div>
                     </div>
                 </div>
@@ -675,7 +640,8 @@
             <div class="commands">
                 <h3>Voice Commands:</h3>
                 <p>1. Set faction: "<strong>faction russian / russian forces</strong>", "<strong>faction british /
-                    british forces</strong>", or "<strong>faction standard / standard forces</strong>"</p>
+                        british forces</strong>" or "<strong>faction US / US forces</strong>" or "<strong>faction
+                        Germany / German forces</strong>"</p>
                 <p>2. Calculate: Say a number followed by "meters" (e.g., "<strong>400 (meters)</strong>"). Saying four
                     zero zero works as well.</p>
                 <p>3. Repeat: Say "<strong>repeat mils</strong>" to hear the last calculation.</p>
@@ -684,33 +650,251 @@
             </div>
         </div>
     </div>
-</div>
+    </div>
 
-<script>
-    let currentFaction = 'standard';
-    let calculationHistory = [];
-    let micPermissionGranted = false;
-    let minMeters = 100;
-    let maxMeters = 1600;
-    const audioSettings = {
-        enabled: true,
-        voice: 'UK English Female',
-        volume: 1,
-        rate: 1
-    };
+    <script>
+        const FACTION_DATA = {
+            'us': {
+                icon: '⭐',
+                voice: 'us_artillery',
+                name: 'U.S.'
+            },
+            'german': {
+                icon: '⚔️',
+                voice: 'german_artillery',
+                name: 'Germany'
+            },
+            'british': {
+                icon: '🇬🇧',
+                phrase: 'Artillery standing by, sir',
+                voice: 'british_artillery',
+                name: 'U.K.'
+            },
+            'russian': {
+                icon: '🇷🇺',
+                phrase: 'Comrade, artillery ready',
+                voice: 'russian_artillery',
+                name: 'Russia'
+            }
+        };
+        class MilitaryAudioPlayer {
+            constructor() {
+                this.voice = 'us_artillery'; // Default voice
+                this.digitCache = new Map(); // Cache for digit audio
+                this.phraseCache = new Map(); // Cache for phrase audio
+                this.basePath = 'audio'; // Base path for audio files
+                this.radioStatic = new Audio('audio/effects/radio_noise.mp3'); // Radio static effect
+                this.radioStatic.volume = 0.1; // Lower volume for static (reduced from 0.2)
+                this.radioStatic.loop = true; // Loop the static noise
+                this.volume = 1; // Default volume
+                this.isPlaying = false; // Track if audio is playing
+                this.useStaticNoise = true; // Whether to use static noise
+                this.audioQueue = []; // Queue for managing audio playback
+            }
 
-    const rvVoices = [
-        'UK English Female',
-        'UK English Male',
-        'US English Female',
-        'US English Male',
-        'Australian Female'
-    ];
+            /**
+             * Set whether to use static noise.
+             * @param {boolean} enabled - Whether to enable static noise.
+             */
+            setUseStaticNoise(enabled) {
+                this.useStaticNoise = enabled;
+            }
 
-    function initSettings() {
-        const savedSettings = localStorage.getItem('audioSettings');
-        if (savedSettings) {
-            Object.assign(audioSettings, JSON.parse(savedSettings));
+            /**
+             * Set the volume for all audio.
+             * @param {number} volume - Volume level (0-100).
+             */
+            setVolume(volume) {
+                this.volume = volume / 100;
+                this.radioStatic.volume = 0.1 * this.volume; // Adjust static volume relative to main volume
+            }
+
+            /**
+             * Set the current voice and preload all audio files for that voice.
+             * @param {string} voice - The voice to set (e.g., 'us_artillery', 'german_artillery').
+             */
+            async setVoice(voice) {
+                this.voice = voice;
+                await this.preloadDigits();
+                await this.preloadPhrases();
+            }
+
+            /**
+             * Preload all digit audio files for the current voice.
+             */
+            async preloadDigits() {
+                const digits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'mils'];
+                for (const digit of digits) {
+                    await this.loadAudio(`${this.basePath}/${this.voice}/digits/${digit}.mp3`, this.digitCache);
+                }
+            }
+
+            /**
+             * Preload all phrase audio files for the current voice.
+             */
+            async preloadPhrases() {
+                const phrases = [
+                    'startup', 'faction_selected', 'stop_response', 'repeat', 'previous',
+                    'calculating', 'coordinates_received', 'invalid_distance', 'out_of_range', 'microphone_error'
+                ];
+                for (const phrase of phrases) {
+                    await this.loadAudio(`${this.basePath}/${this.voice}/phrases/${phrase}.mp3`, this.phraseCache);
+                }
+            }
+
+            /**
+             * Load an audio file and cache it.
+             * @param {string} path - The path to the audio file.
+             * @param {Map} cache - The cache to store the audio in.
+             */
+            async loadAudio(path, cache) {
+                return new Promise((resolve, reject) => {
+                    if (!cache.has(path)) {
+                        const audio = new Audio(path);
+                        audio.addEventListener('canplaythrough', () => {
+                            cache.set(path, audio);
+                            resolve();
+                        }, { once: true });
+                        audio.addEventListener('error', () => {
+                            reject(new Error(`Failed to load audio: ${path}`));
+                        }, { once: true });
+                    } else {
+                        resolve();
+                    }
+                });
+            }
+
+            /**
+             * Play a digit or phrase with optional radio static.
+             * @param {string} type - The type of audio ('digit' or 'phrase').
+             * @param {string} key - The key for the audio (e.g., '0', 'startup').
+             */
+            async playAudio(type, key) {
+                const cache = type === 'digit' ? this.digitCache : this.phraseCache;
+                const path = `${this.basePath}/${this.voice}/${type}s/${key}.mp3`;
+
+                if (!cache.has(path)) {
+                    try {
+                        await this.loadAudio(path, cache);
+                    } catch (error) {
+                        console.error(error);
+                        return;
+                    }
+                }
+
+                const audio = cache.get(path);
+                audio.volume = this.volume;
+
+                // Play radio static if enabled and not already playing
+                if (this.useStaticNoise && !this.isPlaying) {
+                    this.radioStatic.currentTime = 0;
+                    this.radioStatic.play();
+                    this.isPlaying = true;
+                }
+
+                // Play the audio
+                return new Promise((resolve) => {
+                    audio.addEventListener('ended', () => {
+                        resolve();
+                    }, { once: true });
+                    audio.play();
+                });
+            }
+
+            /**
+             * Play a sequence of digits followed by "mils".
+             * @param {number} mils - The mils value to play.
+             */
+            async playMils(mils) {
+                const digits = String(mils).split('');
+
+                // Play each digit sequentially with minimal delay
+                for (const digit of digits) {
+                    await this.playAudio('digit', digit);
+                    await this.delay(50); // Reduced delay between digits for smoother playback
+                }
+
+                // Play "mils"
+                await this.playAudio('phrase', 'over');
+
+                // Stop the radio static after a short delay (if enabled)
+                if (this.useStaticNoise) {
+                    setTimeout(() => {
+                        this.radioStatic.pause();
+                        this.isPlaying = false;
+                    }, 500); // Delay before stopping static to avoid abrupt cut-off
+                }
+            }
+
+            /**
+             * Play a phrase.
+             * @param {string} phrase - The phrase to play (e.g., 'startup', 'faction_selected').
+             */
+            async playPhrase(phrase) {
+                try {
+                    await this.playAudio('phrase', phrase);
+
+                    // Stop the radio static after the phrase is done (if enabled)
+                    if (this.useStaticNoise) {
+                        setTimeout(() => {
+                            this.radioStatic.pause();
+                            this.isPlaying = false;
+                        }, 300); // Delay before stopping static to avoid abrupt cut-off
+                    }
+                } catch (error) {
+                    console.error('Error playing phrase:', error);
+                }
+            }
+
+            /**
+             * Delay for a specified number of milliseconds.
+             * @param {number} ms - The delay in milliseconds.
+             */
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+        const audioPlayer = new MilitaryAudioPlayer();
+        audioPlayer.setUseStaticNoise(false);
+        // Set voice based on faction
+        function setVoiceForFaction(faction) {
+            audioPlayer.setVoice(FACTION_DATA[faction].voice);
+        }
+        let currentFaction = 'us';
+
+        let calculationHistory = [];
+        let micPermissionGranted = false;
+        let minMeters = 100;
+        let maxMeters = 1600;
+        const audioSettings = {
+            enabled: true,
+            volume: 1
+        };
+        function initSettings() {
+            const savedSettings = localStorage.getItem('audioSettings');
+            if (savedSettings) {
+                const settings = JSON.parse(savedSettings);
+                document.getElementById('audioEnabled').checked = settings.enabled;
+                document.getElementById('radioNoiseEnabled').checked = settings.useStaticNoise;
+                document.getElementById('volumeSlider').value = settings.volume * 100;
+                audioPlayer.setVolume(settings.volume * 100);
+                audioPlayer.setUseStaticNoise(settings.useStaticNoise); // Apply radio noise setting
+                updateSliderValues();
+            }
+        }
+
+        function saveSettings() {
+            const settings = {
+                enabled: document.getElementById('audioEnabled').checked,
+                useStaticNoise: document.getElementById('radioNoiseEnabled').checked,
+                volume: parseFloat(document.getElementById('volumeSlider').value) / 100
+            };
+            localStorage.setItem('audioSettings', JSON.stringify(settings));
+            audioPlayer.setUseStaticNoise(settings.useStaticNoise); // Update radio noise setting
+            localStorage.setItem('currentFaction', currentFaction);
+            localStorage.setItem('audioEnabled', JSON.stringify(audioEnabled));
+            localStorage.setItem('calculationHistory', JSON.stringify(calculationHistory));
+
         }
 
         // Update checkbox initialization
@@ -718,516 +902,438 @@
         audioEnabledCheckbox.checked = audioSettings.enabled;
 
         // Add event listener for the new checkbox
-        audioEnabledCheckbox.addEventListener('change', function() {
+        audioEnabledCheckbox.addEventListener('change', function () {
             audioSettings.enabled = this.checked;
             saveSettings();
         });
 
+        function updateSliderValues() {
+            const volume = document.getElementById('volumeSlider').value;
+            document.getElementById('volumeValue').textContent = volume;
+            audioPlayer.setVolume(volume);
+        }
+        const standardConversion = (meters) => {
+            const A = 1001.465;
+            const B = -0.2371;
+            return Math.round(A + (B * meters));
+        };
 
-        document.getElementById('audioEnabled').checked = audioSettings.enabled;
-        document.getElementById('volumeSlider').value = audioSettings.volume * 100;
-        document.getElementById('rateSlider').value = audioSettings.rate;
-        updateSliderValues();
+        const russianConversion = (meters) => {
+            const A = 1120;
+            const B = 21.33;
+            const L = 100;
+            return Math.round(A - (((meters / L) - 1) * B));
+        };
 
-        const voiceSelect = document.getElementById('voiceSelect');
-        rvVoices.forEach(voice => {
-            const option = document.createElement('option');
-            option.value = voice;
-            option.textContent = voice;
-            if (voice === audioSettings.voice) {
-                option.selected = true;
+        const britishConversion = (meters) => {
+            const m = -0.1773;
+            const b = 550.69;
+            return Math.round(m * meters + b);
+        };
+
+        function calculateMils(meters) {
+            if (isNaN(meters) || meters < minMeters || meters > maxMeters) return null;
+
+            let mils;
+            if (currentFaction === 'russian') {
+                mils = russianConversion(meters);
+            } else if (currentFaction === 'british') {
+                mils = britishConversion(meters);
+            } else {
+                mils = standardConversion(meters);
             }
-            voiceSelect.appendChild(option);
-        });
-    }
 
+            document.getElementById('conversion').textContent = `${meters} meters = ${mils} mils`;
+            addToHistory(meters, mils, currentFaction);
+            speakMils(mils);
+            return mils;
+        }
+        // Load settings and history from localStorage
+        function loadSettings() {
+            const savedFaction = localStorage.getItem('currentFaction');
+            const savedAudioEnabled = localStorage.getItem('audioEnabled');
+            const savedHistory = localStorage.getItem('calculationHistory');
 
-    function updateSliderValues() {
-        document.getElementById('volumeValue').textContent =
-            Math.round(document.getElementById('volumeSlider').value);
-        document.getElementById('rateValue').textContent =
-            document.getElementById('rateSlider').value;
-    }
-    const standardConversion = (meters) => {
-        const A = 1001.465;
-        const B = -0.2371;
-        return Math.round(A + (B * meters));
-    };
+            if (savedFaction) currentFaction = savedFaction;
+            if (savedAudioEnabled) audioEnabled = JSON.parse(savedAudioEnabled);
+            if (savedHistory) calculationHistory = JSON.parse(savedHistory);
 
-    const russianConversion = (meters) => {
-        const A = 1120;
-        const B = 21.33;
-        const L = 100;
-        return Math.round(A - (((meters / L) - 1) * B));
-    };
-
-    const britishConversion = (meters) => {
-        const m = -0.1773;
-        const b = 550.69;
-        return Math.round(m * meters + b);
-    };
-
-    function calculateMils(meters) {
-        if (isNaN(meters) || meters < minMeters || meters > maxMeters) return null;
-
-        let mils;
-        if (currentFaction === 'russian') {
-            mils = russianConversion(meters);
-        } else if (currentFaction === 'british') {
-            mils = britishConversion(meters);
-        } else {
-            mils = standardConversion(meters);
+            updateFactionUI(currentFaction);
+            try {
+                updateHistoryUI();
+            } catch (e) {
+                console.error("Error during updateHistoryUI", e);
+            }
         }
 
-        document.getElementById('conversion').textContent = `${meters} meters = ${mils} mils`;
-        addToHistory(meters, mils, currentFaction);
-        speakMils(mils);
-        return mils;
-    }
-    // Load settings and history from localStorage
-    function loadSettings() {
-        const savedFaction = localStorage.getItem('currentFaction');
-        const savedAudioEnabled = localStorage.getItem('audioEnabled');
-        const savedHistory = localStorage.getItem('calculationHistory');
 
-        if (savedFaction) currentFaction = savedFaction;
-        if (savedAudioEnabled) audioEnabled = JSON.parse(savedAudioEnabled);
-        if (savedHistory) calculationHistory = JSON.parse(savedHistory);
 
-        updateFactionUI(currentFaction);
-        updateHistoryUI();
-    }
-
-    // Save settings and history to localStorage
-    function saveSettings() {
-        localStorage.setItem('currentFaction', currentFaction);
-        localStorage.setItem('audioEnabled', JSON.stringify(audioEnabled));
-        localStorage.setItem('calculationHistory', JSON.stringify(calculationHistory));
-
-        audioSettings.enabled = document.getElementById('audioEnabled').checked;
-        audioSettings.voice = document.getElementById('voiceSelect').value;
-        audioSettings.volume = parseFloat(document.getElementById('volumeSlider').value) / 100;
-        audioSettings.rate = parseFloat(document.getElementById('rateSlider').value);
-
-        localStorage.setItem('audioSettings', JSON.stringify(audioSettings));
-
-    }
-
-    // Clear history
-    function clearHistory() {
-        calculationHistory = [];
-        updateHistoryUI();
-        saveSettings();
-    }
-
-    // Update updateFactionUI function
-    function updateFactionUI(faction) {
-        document.getElementById('standardFaction').classList.remove('active');
-        document.getElementById('russianFaction').classList.remove('active');
-        document.getElementById('britishFaction').classList.remove('active');
-
-        if (faction === 'standard') {
-            document.getElementById('standardFaction').classList.add('active');
-        } else if (faction === 'russian') {
-            document.getElementById('russianFaction').classList.add('active');
-        } else if (faction === 'british') {
-            document.getElementById('britishFaction').classList.add('active');
+        // Clear history
+        function clearHistory() {
+            calculationHistory = [];
+            updateHistoryUI();
+            saveSettings();
         }
-    }
 
-    function getRelativeTime(timestamp) {
-        const now = new Date();
-        const diffInSeconds = Math.floor((now - new Date(timestamp)) / 1000);
+        // Update updateFactionUI function
+        function updateFactionUI(faction) {
+            document.getElementById('usFaction').classList.remove('active');
+            document.getElementById('germanFaction').classList.remove('active');
 
-        if (diffInSeconds < 60) {
-            return `${diffInSeconds} second${diffInSeconds === 1 ? '' : 's'} ago`;
-        } else if (diffInSeconds < 3600) {
-            const diffInMinutes = Math.floor(diffInSeconds / 60);
-            return `${diffInMinutes} minute${diffInMinutes === 1 ? '' : 's'} ago`;
-        } else if (diffInSeconds < 86400) {
-            const diffInHours = Math.floor(diffInSeconds / 3600);
-            return `${diffInHours} hour${diffInHours === 1 ? '' : 's'} ago`;
-        } else {
-            const diffInDays = Math.floor(diffInSeconds / 86400);
-            return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
+            document.getElementById('russianFaction').classList.remove('active');
+            document.getElementById('britishFaction').classList.remove('active');
+
+            if (faction === 'us') {
+                document.getElementById('usFaction').classList.add('active');
+            } else if (faction === 'german') {
+                document.getElementById('germanFaction').classList.add('active');
+            } else if (faction === 'russian') {
+                document.getElementById('russianFaction').classList.add('active');
+            } else if (faction === 'british') {
+                document.getElementById('britishFaction').classList.add('active');
+            }
+            setVoiceForFaction(faction);
         }
-    }
-    function toggleSettings() {
-        const panel = document.querySelector('.settings-panel');
-        const toggle = document.querySelector('.settings-toggle');
-        panel.classList.toggle('collapsed');
-        toggle.classList.toggle('collapsed');
-    }
 
-    function updateHistoryTimestamps() {
-        const historyItems = document.querySelectorAll('.history-item');
-        historyItems.forEach(item => {
-            const timestamp = item.getAttribute('data-timestamp');
-            const relativeTime = getRelativeTime(timestamp);
-            item.querySelector('.history-timestamp').textContent = relativeTime;
-        });
-    }
+        function getRelativeTime(timestamp) {
+            const now = new Date();
+            const diffInSeconds = Math.floor((now - new Date(timestamp)) / 1000);
 
-    // Update the addToHistory function
-    function addToHistory(meters, mils, faction) {
-        const capitalizedFaction = faction.charAt(0).toUpperCase() + faction.slice(1);
-        const timestamp = new Date().toISOString();
+            if (diffInSeconds < 60) {
+                return `${diffInSeconds} second${diffInSeconds === 1 ? '' : 's'} ago`;
+            } else if (diffInSeconds < 3600) {
+                const diffInMinutes = Math.floor(diffInSeconds / 60);
+                return `${diffInMinutes} minute${diffInMinutes === 1 ? '' : 's'} ago`;
+            } else if (diffInSeconds < 86400) {
+                const diffInHours = Math.floor(diffInSeconds / 3600);
+                return `${diffInHours} hour${diffInHours === 1 ? '' : 's'} ago`;
+            } else {
+                const diffInDays = Math.floor(diffInSeconds / 86400);
+                return `${diffInDays} day${diffInDays === 1 ? '' : 's'} ago`;
+            }
+        }
+        function toggleSettings() {
+            const panel = document.querySelector('.settings-panel');
+            const toggle = document.querySelector('.settings-toggle');
+            panel.classList.toggle('collapsed');
+            toggle.classList.toggle('collapsed');
+        }
 
-        calculationHistory.unshift({
-            meters,
-            mils,
-            faction: capitalizedFaction,
-            timestamp
-        });
 
-        if (calculationHistory.length > 10) calculationHistory.pop();
-        updateHistoryUI();
-        saveSettings();
-    }
-
-    // Update the updateHistoryUI function
-    function updateHistoryUI() {
-        const historyList = document.getElementById('historyList');
-        historyList.innerHTML = calculationHistory.map(item => `
-            <div class="history-item" data-timestamp="${item.timestamp}">
-                <span class="history-faction">${getFactionIcon(item.faction)} ${item.faction}</span>
+function getFullDateTime(timestamp) {
+    const now = new Date();
+    const date = new Date(timestamp);
+    const formatter = new Intl.DateTimeFormat(navigator.language, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+    });
+    return formatter.format(date);
+}
+        function updateHistoryUI() {
+            const historyList = document.getElementById('historyList');
+            historyList.innerHTML = calculationHistory.map(item => `
+            <div class="history-item" data-timestamp="${getFullDateTime(item.timestamp)}">
+                <span class="history-faction">${getFactionIcon(item.faction)} ${getFactionName(item.faction)}</span>
                 <span class="history-calculation">
                     ${item.meters}m = <span class="history-mils">${item.mils} mils</span>
                 </span>
                 <span class="history-timestamp">${getRelativeTime(item.timestamp)}</span>
             </div>
         `).join('');
-    }
-
-    // Initialize the interval for updating timestamps
-    setInterval(updateHistoryTimestamps, 30000); // Update every minute
-
-
-    function getFactionIcon(faction) {
-        switch (faction.toLowerCase()) {
-            case 'standard':
-                return '⚔️'; // Sword icon for standard forces
-            case 'russian':
-                return '🇷🇺'; // Russian flag for Russian forces
-            case 'british':
-                return '🇬🇧'; // British flag for British forces
-            default:
-                return '🎯'; // Default target icon
-        }
-    }
-    function speakMils(mils) {
-        console.log('Speaking mils:', mils);
-        if (!audioSettings.enabled) {
-            console.log('Audio is disabled');
-            return;
         }
 
-        const digits = String(mils).split('');
-        const digitWords = {
-            '0': 'zero',
-            '1': 'one',
-            '2': 'two',
-            '3': 'three',
-            '4': 'four',
-            '5': 'five',
-            '6': 'six',
-            '7': 'seven',
-            '8': 'eight',
-            '9': 'nine'
-        };
+        // Update the addToHistory function
+        function addToHistory(meters, mils, faction) {
+            const timestamp = new Date().toISOString();
 
-        const spokenDigits = digits.map(d => digitWords[d]).join(' ');
-        const text = `${spokenDigits} mils`;
-        console.log('Text to speak:', text);
+            calculationHistory.unshift({
+                meters,
+                mils,
+                faction,
+                timestamp
+            });
 
-        try {
-            if (typeof responsiveVoice !== 'undefined') {
-                responsiveVoice.speak(text, audioSettings.voice, {
-                    volume: audioSettings.volume,
-                    rate: audioSettings.rate,
-                    pitch: audioSettings.pitch
-                });
-            } else {
-                console.error('ResponsiveVoice is not loaded');
-            }
-        } catch (e) {
-            console.error('Speech error:', e);
+            if (calculationHistory.length > 10) calculationHistory.pop();
+            updateHistoryUI();
+            saveSettings();
         }
-    }
-    // Request microphone permission
-    async function requestMicrophonePermission() {
-        try {
-            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-            micPermissionGranted = true;
-            stream.getTracks().forEach(track => track.stop());
-            return true;
-        } catch (err) {
-            console.error('Microphone permission denied:', err);
-            document.getElementById('status').textContent = 'Status: Microphone access denied';
-            document.getElementById('startBtn').disabled = true;
-            return false;
+
+
+        function updateHistoryTimestamps() {
+            const historyItems = document.querySelectorAll('.history-item');
+            historyItems.forEach(item => {
+                const timestamp = item.getAttribute('data-timestamp');
+                const relativeTime = getRelativeTime(timestamp);
+                item.querySelector('.history-timestamp').textContent = relativeTime;
+            });
         }
-    }
 
-    // Update button states
-    function updateButtonStates(isListening) {
-        document.getElementById('startBtn').disabled = isListening;
-        document.getElementById('stopBtn').disabled = !isListening;
-    }
+        // Initialize the interval for updating timestamps
+        setInterval(updateHistoryTimestamps, 30000); // Update every minute
 
-    // Setup keyboard input
-    document.getElementById('calculateBtn').addEventListener('click', () => {
-        const meters = parseInt(document.getElementById('metersInput').value);
-        calculateMils(meters);
-    });
 
-    document.getElementById('metersInput').addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-            const meters = parseInt(e.target.value);
-            calculateMils(meters);
+        function getFactionIcon(faction) {
+            return FACTION_DATA[faction].icon;
         }
-    });
-
-    // Faction selection
-    document.getElementById('standardFaction').addEventListener('click', () => {
-        currentFaction = 'standard';
-        updateFactionUI('standard');
-        saveSettings();
-    });
-
-    document.getElementById('russianFaction').addEventListener('click', () => {
-        currentFaction = 'russian';
-        updateFactionUI('russian');
-        saveSettings();
-    });
-
-    document.getElementById('britishFaction').addEventListener('click', () => {
-        currentFaction = 'british';
-        updateFactionUI('british');
-        saveSettings();
-    });
-    // Speak function with fallback
-    function speak(text) {
-        if (!audioSettings.enabled) return;
-
-        try {
-            // Try ResponsiveVoice first
-            if (typeof responsiveVoice !== 'undefined') {
-                responsiveVoice.speak(text, audioSettings.voice, {
-                    volume: audioSettings.volume,
-                    rate: audioSettings.rate,
-                    pitch: audioSettings.pitch
-                });
-            }
-            // Fallback to Web Speech API
-            else if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.volume = audioSettings.volume;
-                utterance.rate = audioSettings.rate;
-                utterance.pitch = audioSettings.pitch;
-
-                speechSynthesis.speak(utterance);
-            }
-        } catch (e) {
-            console.error('Speech error:', e);
+        function getFactionName(faction) {
+            return FACTION_DATA[faction].name;
         }
-    }
-
-
-
-    // Clear history button
-    document.getElementById('clearHistoryBtn').addEventListener('click', () => {
-        clearHistory();
-    });
-
-    // Voice recognition setup
-    if (annyang) {
-        const commands = {
-             'repeat': function() {
-                console.log('Repeat command triggered');
-                if (calculationHistory.length > 0) {
-                    const lastMils = calculationHistory[0].mils;
-                    console.log('Last mils:', lastMils);
-                    speakMils(lastMils);
-                } else {
-                    console.log('No history to repeat');
-                }
-            },
-            'previous': function() {
-                console.log('Previous command triggered');
-                if (calculationHistory.length > 1) {
-                    const previousMils = calculationHistory[1].mils;
-                    console.log('Previous mils:', previousMils);
-                    speakMils(previousMils);
-                } else {
-                    console.log('Not enough history for previous');
-                }
-            },
-            'faction *team': function(team) {
-                const teamLower = team.toLowerCase();
-                if (teamLower === 'russian') {
-                    currentFaction = 'russian';
-                    updateFactionUI('russian');
-                    if (audioEnabled) {
-                        speak('Russian forces selected');
-                    }
-                } else if (teamLower === 'british' || [ 'uk', 'common wealth'].includes(teamLower)) {
-                    currentFaction = 'british';
-                    updateFactionUI('british');
-                    if (audioEnabled) {
-                        speak('British forces selected');
-                    }
-                } else if (teamLower === 'standard' || ['us', 'german', 'axis'].includes(teamLower)) {
-                    currentFaction = 'standard';
-                    updateFactionUI('standard');
-                    if (audioEnabled) {
-                        speak('Standard forces selected');
-                    }
-                }
-                saveSettings();
-            },
-            '*team forces': function(team) {
-                const teamLower = team.toLowerCase();
-                if (teamLower === 'russian') {
-                    currentFaction = 'russian';
-                    updateFactionUI('russian');
-                    if (audioEnabled) {
-                        speak('Russian forces selected');
-                    }
-                } else if (teamLower === 'british' || [ 'uk', 'common wealth'].includes(teamLower)) {
-                    currentFaction = 'british';
-                    updateFactionUI('british');
-                    if (audioEnabled) {
-                        speak('British forces selected');
-                    }
-                } else if (teamLower === 'standard' || ['us', 'german', 'axis'].includes(teamLower)) {
-                    currentFaction = 'standard';
-                    updateFactionUI('standard');
-                    if (audioEnabled) {
-                        speak('Standard forces selected');
-                    }
-                }
-                saveSettings();
-            },
-            ':number meter': function(number) {
-                const meters = parseInt(number);
-                calculateMils(meters);
-            },
-            ':number meters': function(number) {
-                const meters = parseInt(number);
-                calculateMils(meters);
-            },
-            ':number': function(number) {
-                const meters = parseInt(number);
-                calculateMils(meters);
-            }
-        };
-        annyang.addCommands(commands);
-        annyang.addCallback('result', function(phrases) {
-            console.log('Recognized phrases:', phrases);
-        });
-        document.getElementById('startBtn').addEventListener('click', async () => {
+        async function speakMils(mils) {
+            await audioPlayer.playMils(mils);
+        }
+        // Request microphone permission
+        async function requestMicrophonePermission() {
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-                stream.getTracks().forEach(track => track.stop()); // Stop the stream immediately
                 micPermissionGranted = true;
-                annyang.start({ autoRestart: true, continuous: true });
-                document.getElementById('status').textContent = 'Status: Listening';
-                updateButtonStates(true);
+                stream.getTracks().forEach(track => track.stop());
+                return true;
             } catch (err) {
                 console.error('Microphone permission denied:', err);
                 document.getElementById('status').textContent = 'Status: Microphone access denied';
                 document.getElementById('startBtn').disabled = true;
-            }
-        });
-
-        // Stop button handler
-        document.getElementById('stopBtn').addEventListener('click', () => {
-            annyang.abort();
-            document.getElementById('status').textContent = 'Status: Not listening';
-            updateButtonStates(false);
-        });
-        document.getElementById('audioEnabled').addEventListener('change', saveSettings);
-        document.getElementById('voiceSelect').addEventListener('change', saveSettings);
-        document.getElementById('volumeSlider').addEventListener('input', () => {
-            updateSliderValues();
-            saveSettings();
-        });
-        document.getElementById('rateSlider').addEventListener('input', () => {
-            updateSliderValues();
-            saveSettings();
-        });
-
-        // Error handling
-        annyang.addCallback('error', function(err) {
-            console.error('Annyang error:', err);
-            if (err.error === 'network') {
-                document.getElementById('status').textContent = 'Status: Network error - check connection';
-            } else if (err.error === 'audio') {
-                document.getElementById('status').textContent = 'Status: Audio error - check microphone';
-                micPermissionGranted = false;
-            } else if (err.error === 'aborted') {
-                document.getElementById('status').textContent = 'Status: Recognition stopped';
-                updateButtonStates(false);
-                return;
-            } else {
-                document.getElementById('status').textContent = 'Status: Error occurred';
-            }
-            updateButtonStates(false);
-        });
-
-        // Handle successful start
-        annyang.addCallback('start', function() {
-            micPermissionGranted = true;
-            document.getElementById('status').textContent = 'Status: Listening';
-            updateButtonStates(true);
-        });
-    } else {
-        document.getElementById('startBtn').disabled = true;
-        document.getElementById('stopBtn').disabled = true;
-        document.getElementById('status').textContent = 'Voice recognition not available';
-    }
-    // Initialize on load
-    initSettings();
-
-    // Set initial button states
-    updateButtonStates(false);
-
-    // Load settings on page load
-    loadSettings();
-
-    // Handle page visibility changes
-    document.addEventListener('visibilitychange', function() {
-        if (document.hidden) {
-            if (annyang && annyang.isListening()) {
-                document.getElementById('status').textContent = 'Status: Running in background';
-            }
-        } else {
-            if (annyang && annyang.isListening()) {
-                document.getElementById('status').textContent = 'Status: Listening';
-                updateButtonStates(true);
-            } else {
-                document.getElementById('status').textContent = 'Status: Not listening';
-                updateButtonStates(false);
+                return false;
             }
         }
-    });
-    document.getElementById('enableNotificationsBtn').addEventListener('click', () => {
-        if ('Notification' in window) {
-            Notification.requestPermission().then(permission => {
-                if (permission === 'granted') {
-                    alert('Notifications enabled! You will now receive updates.');
-                } else {
-                    alert('Notifications permission denied. You can enable it later in your browser settings.');
+
+        // Update button states
+        function updateButtonStates(isListening) {
+            document.getElementById('startBtn').disabled = isListening;
+            document.getElementById('stopBtn').disabled = !isListening;
+        }
+
+        // Setup keyboard input
+        document.getElementById('calculateBtn').addEventListener('click', () => {
+            const meters = parseInt(document.getElementById('metersInput').value);
+            calculateMils(meters);
+        });
+
+        document.getElementById('metersInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const meters = parseInt(e.target.value);
+                calculateMils(meters);
+            }
+        });
+
+        // Faction selection
+        document.getElementById('usFaction').addEventListener('click', () => {
+            currentFaction = 'us';
+            updateFactionUI('us');
+            saveSettings();
+        });
+        document.getElementById('germanFaction').addEventListener('click', () => {
+            currentFaction = 'german';
+            updateFactionUI('german');
+            saveSettings();
+        });
+
+        document.getElementById('russianFaction').addEventListener('click', () => {
+            currentFaction = 'russian';
+            updateFactionUI('russian');
+            saveSettings();
+        });
+
+        document.getElementById('britishFaction').addEventListener('click', () => {
+            currentFaction = 'british';
+            updateFactionUI('british');
+            saveSettings();
+        });
+
+
+
+        // Clear history button
+        document.getElementById('clearHistoryBtn').addEventListener('click', () => {
+            clearHistory();
+        });
+        async function speakFactionSelected(faction) {
+            await audioPlayer.playPhrase('faction_selected');
+        }
+        function factionChange(team) {
+            const teamLower = team.toLowerCase();
+            if (teamLower === 'russian') {
+                currentFaction = 'russian';
+                updateFactionUI('russian');
+                if (audioEnabled) {
+                    speakFactionSelected('russian');
+                }
+            } else if (teamLower === 'british' || ['uk', 'common wealth'].includes(teamLower)) {
+                currentFaction = 'british';
+                updateFactionUI('british');
+                if (audioEnabled) {
+                    speakFactionSelected('russian');
+                }
+            } else if (teamLower === 'us' || ['us', 'america', 'united states'].includes(teamLower)) {
+                currentFaction = 'us';
+                updateFactionUI('us');
+                if (audioEnabled) {
+                    speakFactionSelected('us');
+                }
+            } else if (teamLower === 'german' || ['germany', 'axis'].includes(teamLower)) {
+                currentFaction = 'german';
+                updateFactionUI('german');
+                if (audioEnabled) {
+                    speakFactionSelected('german');
+                }
+            }
+            saveSettings();
+
+        }
+        // Voice recognition setup
+        if (annyang) {
+            const commands = {
+                'repeat': function () {
+                    console.log('Repeat command triggered');
+                    if (calculationHistory.length > 0) {
+                        const lastMils = calculationHistory[0].mils;
+                        console.log('Last mils:', lastMils);
+                        speakMils(lastMils);
+                    } else {
+                        console.log('No history to repeat');
+                    }
+                },
+                'previous': function () {
+                    console.log('Previous command triggered');
+                    if (calculationHistory.length > 1) {
+                        const previousMils = calculationHistory[1].mils;
+                        console.log('Previous mils:', previousMils);
+                        speakMils(previousMils);
+                    } else {
+                        console.log('Not enough history for previous');
+                    }
+                },
+                'faction *team': function (team) {
+                    factionChange(team);
+                },
+                '*team forces': function (team) {
+                    factionChange(team);
+                },
+                ':number meter': function (number) {
+                    const meters = parseInt(number);
+                    calculateMils(meters);
+                },
+                ':number meters': function (number) {
+                    const meters = parseInt(number);
+                    calculateMils(meters);
+                },
+                ':number': function (number) {
+                    const meters = parseInt(number);
+                    calculateMils(meters);
+                }
+            };
+            annyang.addCommands(commands);
+            annyang.addCallback('result', function (phrases) {
+                console.log('Recognized phrases:', phrases);
+            });
+            document.getElementById('startBtn').addEventListener('click', async () => {
+                try {
+                    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    stream.getTracks().forEach(track => track.stop()); // Stop the stream immediately
+                    micPermissionGranted = true;
+                    annyang.start({ autoRestart: true, continuous: true });
+                    document.getElementById('status').textContent = 'Status: Listening';
+                    updateButtonStates(true);
+
+                } catch (err) {
+                    console.error('Microphone permission denied:', err);
+                    document.getElementById('status').textContent = 'Status: Microphone access denied';
+                    document.getElementById('startBtn').disabled = true;
                 }
             });
-        } else {
-            alert('This browser does not support notifications.');
-        }
-    });
 
-    // Only request notification permission once
-    if ('Notification' in window && Notification.permission === 'default') {
+            // Stop button handler
+            document.getElementById('stopBtn').addEventListener('click', async () => {
+                // Play the stop response phrase and wait for it to finish
+                await audioPlayer.playPhrase('stop_response');
+
+                // Stop annyang after the phrase is fully played
+                annyang.abort();
+                document.getElementById('status').textContent = 'Status: Not listening';
+                updateButtonStates(false);
+                setTimeout(() => { audioPlayer.playPhrase('startup'); }, 500);
+
+            });
+            document.getElementById('audioEnabled').addEventListener('change', saveSettings);
+            document.getElementById('volumeSlider').addEventListener('input', () => {
+                updateSliderValues();
+                saveSettings();
+            });
+
+            // Error handling
+            annyang.addCallback('error', function (err) {
+                console.error('Annyang error:', err);
+                if (err.error === 'network') {
+                    document.getElementById('status').textContent = 'Status: Network error - check connection';
+                } else if (err.error === 'audio') {
+                    document.getElementById('status').textContent = 'Status: Audio error - check microphone';
+                    micPermissionGranted = false;
+                } else if (err.error === 'aborted') {
+                    document.getElementById('status').textContent = 'Status: Recognition stopped';
+                    updateButtonStates(false);
+                    return;
+                } else {
+                    document.getElementById('status').textContent = 'Status: Error occurred';
+                }
+                updateButtonStates(false);
+
+            });
+
+            // Handle successful start
+            annyang.addCallback('start', async () => {
+                micPermissionGranted = true;
+                document.getElementById('status').textContent = 'Status: Listening';
+                updateButtonStates(true);
+
+            });
+        } else {
+            document.getElementById('startBtn').disabled = true;
+            document.getElementById('stopBtn').disabled = true;
+            document.getElementById('status').textContent = 'Voice recognition not available';
+        }
+        // Initialize on load
+        initSettings();
+
+        // Set initial button states
+        updateButtonStates(false);
+
+        // Load settings on page load
+        loadSettings();
+
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', function () {
+            if (document.hidden) {
+                if (annyang && annyang.isListening()) {
+                    document.getElementById('status').textContent = 'Status: Running in background';
+                }
+            } else {
+                if (annyang && annyang.isListening()) {
+                    document.getElementById('status').textContent = 'Status: Listening';
+                    updateButtonStates(true);
+                } else {
+                    document.getElementById('status').textContent = 'Status: Not listening';
+                    updateButtonStates(false);
+                }
+            }
+        });
+        document.getElementById('enableNotificationsBtn').addEventListener('click', () => {
+            if ('Notification' in window) {
+                Notification.requestPermission().then(permission => {
+                    if (permission === 'granted') {
+                        alert('Notifications enabled! You will now receive updates.');
+                    } else {
+                        alert('Notifications permission denied. You can enable it later in your browser settings.');
+                    }
+                });
+            } else {
+                alert('This browser does not support notifications.');
+            }
+        });
+
+        // Only request notification permission once
+        if ('Notification' in window && Notification.permission === 'default') {
             Notification.requestPermission().then(permission => {
                 if (permission === 'granted') {
                     document.getElementById('enableNotificationsBtn').style.visibility = 'hidden';
@@ -1235,7 +1341,8 @@
                     alert('Notifications permission denied. You can enable it later in your browser settings.');
                 }
             });
-    }
-</script>
+        }
+    </script>
 </body>
+
 </html>
