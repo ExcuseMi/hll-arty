@@ -843,14 +843,18 @@ class MilitaryAudioPlayer {
      * @param {string} phrase - The phrase to play (e.g., 'startup', 'faction_selected').
      */
     async playPhrase(phrase) {
-        await this.playAudio('phrase', phrase);
+        try {
+            await this.playAudio('phrase', phrase);
 
-        // Stop the radio static after the phrase is done (if enabled)
-        if (this.useStaticNoise) {
-            setTimeout(() => {
-                this.radioStatic.pause();
-                this.isPlaying = false;
-            }, 500); // Delay before stopping static to avoid abrupt cut-off
+            // Stop the radio static after the phrase is done (if enabled)
+            if (this.useStaticNoise) {
+                setTimeout(() => {
+                    this.radioStatic.pause();
+                    this.isPlaying = false;
+                }, 300); // Delay before stopping static to avoid abrupt cut-off
+            }
+        } catch (error) {
+            console.error('Error playing phrase:', error);
         }
     }
 
@@ -1230,6 +1234,8 @@ class MilitaryAudioPlayer {
                 annyang.start({ autoRestart: true, continuous: true });
                 document.getElementById('status').textContent = 'Status: Listening';
                 updateButtonStates(true);
+
+                // Play the startup phrase and wait for it to finish
                 await audioPlayer.playPhrase('startup');
             } catch (err) {
                 console.error('Microphone permission denied:', err);
@@ -1240,11 +1246,13 @@ class MilitaryAudioPlayer {
 
         // Stop button handler
         document.getElementById('stopBtn').addEventListener('click', async () => {
+            // Play the stop response phrase and wait for it to finish
+            await audioPlayer.playPhrase('stop_response');
+
+            // Stop annyang after the phrase is fully played
             annyang.abort();
             document.getElementById('status').textContent = 'Status: Not listening';
             updateButtonStates(false);
-            await audioPlayer.playPhrase('stop_response');
-
         });
         document.getElementById('audioEnabled').addEventListener('change', saveSettings);
         document.getElementById('volumeSlider').addEventListener('input', () => {
