@@ -570,23 +570,39 @@ img, svg, video, canvas, audio, iframe, embed, object {
   display: block;
   vertical-align: middle;
 }
+    .title-container {
+    display: flex;
+    align-items: center; /* Vertically center the logo with the title */
+    gap: 10px; /* Space between the title and the logo */
+    margin-bottom: 20px; /* Adjust spacing as needed */
+}
+
+.title-container h1 {
+    margin: 0; /* Remove default margin from the title */
+}
+
+/* Optional hover effect for the logo */
+a:hover img {
+    opacity: 0.8;
+    transform: scale(1.05);
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
 </style>
 </head>
 
 <body>
-    <div style="position: absolute; top: 20px; right: 20px;">
-        <a href="https://discord.gg/the-circle" target="_blank" rel="noopener noreferrer">
-            <img
-                alt="The Circle Logo"
-                class="h-12 w-12 rounded-md object-cover"
-                src="images/circle-640.png"
-            />
-        </a>
-    </div>
     <div class="container">
         <div class="calculator">
-            <h1>HLL Artillery Range Assistant</h1>
-
+            <div class="title-container">
+                <h1>Hell Let Loose Artillery Calculator</h1>
+                <a href="https://discord.gg/the-circle" target="_blank" rel="noopener noreferrer">
+                    <img
+                        alt="The Circle Logo"
+                        class="h-12 w-12 rounded-md object-cover"
+                        src="/images/circle-640.png"
+                    />
+                </a>
+            </div>
             <div class="control-panel">
                 <button class="control-button" id="startBtn">Start Voice</button>
                 <button class="control-button" disabled id="stopBtn">Stop Voice</button>
