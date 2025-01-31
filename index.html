@@ -910,7 +910,6 @@
              */
             async playMils(mils) {
                 const digits = String(mils).split('');
-                // Play "mils"
                 //await this.playAudio('phrase', 'set_target_to');
 
                 // Play each digit sequentially with minimal delay
@@ -919,7 +918,7 @@
                     await this.delay(50); // Reduced delay between digits for smoother playback
                 }
 
-                // Play "mils"
+                // Play "over"
                 await this.playAudio('phrase', 'over');
 
                 // Stop the radio static after a short delay (if enabled)
