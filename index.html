@@ -1236,6 +1236,7 @@ function getFullDateTime(timestamp) {
                     annyang.start({ autoRestart: true, continuous: true });
                     document.getElementById('status').textContent = 'Status: Listening';
                     updateButtonStates(true);
+                    setTimeout(async () => { await audioPlayer.playPhrase('startup'); }, 500);
 
                 } catch (err) {
                     console.error('Microphone permission denied:', err);
@@ -1253,7 +1254,7 @@ function getFullDateTime(timestamp) {
                 annyang.abort();
                 document.getElementById('status').textContent = 'Status: Not listening';
                 updateButtonStates(false);
-                setTimeout(() => { audioPlayer.playPhrase('startup'); }, 500);
+                setTimeout(async () => { await audioPlayer.playPhrase('stop_response'); }, 500);
 
             });
             document.getElementById('audioEnabled').addEventListener('change', saveSettings);
