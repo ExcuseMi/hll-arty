@@ -696,7 +696,7 @@ class MilitaryAudioPlayer {
         this.phraseCache = new Map(); // Cache for phrase audio
         this.basePath = 'audio'; // Base path for audio files
         this.radioStatic = new Audio('audio/effects/radio_noise.mp3'); // Radio static effect
-        this.radioStatic.volume = 0.1; // Lower volume for static (reduced from 0.2)
+        this.radioStatic.volume = 0.05; // Lower volume for static (reduced from 0.2)
         this.radioStatic.loop = true; // Loop the static noise
         this.volume = 1; // Default volume
         this.isPlaying = false; // Track if audio is playing
@@ -797,7 +797,6 @@ class MilitaryAudioPlayer {
      */
     async playMils(mils) {
         const digits = String(mils).split('');
-        await this.playPhrase('set');
 
         // Play each digit sequentially with minimal delay
         for (const digit of digits) {
@@ -806,13 +805,13 @@ class MilitaryAudioPlayer {
         }
 
         // Play "mils"
-        await this.playPhrase('over');
+        await this.playAudio('digit', 'mils');
 
         // Stop the radio static after a short delay
         setTimeout(() => {
             this.radioStatic.pause();
             this.isPlaying = false;
-        }, 100); // Delay before stopping static to avoid abrupt cut-off
+        }, 500); // Delay before stopping static to avoid abrupt cut-off
     }
 
     /**
@@ -821,6 +820,12 @@ class MilitaryAudioPlayer {
      */
     async playPhrase(phrase) {
         await this.playAudio('phrase', phrase);
+
+        // Stop the radio static after the phrase is done
+        setTimeout(() => {
+            this.radioStatic.pause();
+            this.isPlaying = false;
+        }, 500); // Delay before stopping static to avoid abrupt cut-off
     }
 
     /**
@@ -1025,18 +1030,14 @@ class MilitaryAudioPlayer {
         saveSettings();
     }
 
-    // Update the updateHistoryUI function
-    function updateHistoryUI() {
-        const historyList = document.getElementById('historyList');
-        historyList.innerHTML = calculationHistory.map(item => `
-            <div class="history-item" data-timestamp="${item.timestamp}">
-                <span class="history-faction">${getFactionIcon(item.faction.toLowerCase())} ${getFactionName(item.faction)}</span>
-                <span class="history-calculation">
-                    ${item.meters}m = <span class="history-mils">${item.mils} mils</span>
-                </span>
-                <span class="history-timestamp">${getRelativeTime(item.timestamp)}</span>
-            </div>
-        `).join('');
+
+    function updateHistoryTimestamps() {
+        const historyItems = document.querySelectorAll('.history-item');
+        historyItems.forEach(item => {
+            const timestamp = item.getAttribute('data-timestamp');
+            const relativeTime = getRelativeTime(timestamp);
+            item.querySelector('.history-timestamp').textContent = relativeTime;
+        });
     }
 
     // Initialize the interval for updating timestamps
