@@ -16,9 +16,9 @@
                 "invalid_distance": "Invalid range, repeat",
                 "out_of_range": "Out of effective range",
                 "microphone_error": "Radio malfunction",
-                "set": "Set",
-                "over": "Over!",
-                "copy": "Copy!"
+                "set": "Set.",
+                "over": "Over.",
+                "copy": "Copy."
 
             },
             "digits": {
@@ -38,7 +38,6 @@
         "german": {
             "name": "German Artillery",
             "voice_id": "A9evEp8yGjv4c3WsIKuY",
-
             "icon": "⚔️",
             "accent": "german",
             "phrases": {
@@ -52,9 +51,9 @@
                 "invalid_distance": "Invalid distance, repeat",
                 "out_of_range": "Out of operational range",
                 "microphone_error": "Communication system failure",
-                "set": "Set",
-                "over": "Over!",
-                "copy": "Copy!"
+                "set": "Set.",
+                "over": "Over.",
+                "copy": "Copy."
 
             },
             "digits": {
@@ -87,9 +86,9 @@
                 "invalid_distance": "Invalid range, repeat",
                 "out_of_range": "Out of effective range",
                 "microphone_error": "Radio malfunction",
-                "set": "Set",
-                "over": "Over!",
-                "copy": "Copy!"
+                "set": "Set.",
+                "over": "Over.",
+                "copy": "Copy."
 
 
             },
@@ -109,7 +108,7 @@
         },
         "russian": {
             "name": "Russian Artillery",
-            "voice_id": "froLDspwCiytX4g1Pobg",
+            "voice_id": "3faLw6tqzw5w1UZMFTgL",
             "icon": "🇷🇺",
             "accent": "russian",
             "phrases": {
@@ -123,9 +122,9 @@
                 "invalid_distance": "Invalid distance, repeat",
                 "out_of_range": "Out of operational range",
                 "microphone_error": "Communication system failure",
-                "set": "Set",
-                "over": "Over!",
-                "copy": "Copy!"
+                "set": "Set.",
+                "over": "Over.",
+                "copy": "Copy."
 
 
             },
