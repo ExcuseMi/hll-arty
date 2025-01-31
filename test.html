@@ -884,7 +884,11 @@ class MilitaryAudioPlayer {
         if (savedHistory) calculationHistory = JSON.parse(savedHistory);
 
         updateFactionUI(currentFaction);
-        updateHistoryUI();
+        try {
+            updateHistoryUI();
+        } catch(e) {
+            console.error("Error during updateHistoryUI", e);
+        }
     }
 
     // Save settings and history to localStorage
