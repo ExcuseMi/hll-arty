@@ -549,6 +549,27 @@
             transform: scale(1.05);
             transition: opacity 0.2s ease, transform 0.2s ease;
         }
+    .object-cover {
+  -o-object-fit: cover;
+  object-fit: cover;
+}
+.rounded-md {
+  border-radius: .375rem;
+}
+.w-12 {
+  width: 3rem;
+}
+.h-12 {
+  height: 3rem;
+}
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+img, svg, video, canvas, audio, iframe, embed, object {
+  display: block;
+  vertical-align: middle;
+}
 </style>
 </head>
 
