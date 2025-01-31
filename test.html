@@ -622,26 +622,12 @@
                     </label>
                 </div>
                 <div class="settings-row">
-                    <div class="settings-group">
-                        <label>Voice:</label>
-                        <div class="voice-select-wrapper">
-                            <select id="voiceSelect"></select>
-                        </div>
-                    </div>
                     <div class="settings-group slider-container">
                         <label>Volume: <span class="slider-value" id="volumeValue">100</span>%</label>
                         <input id="volumeSlider" max="100" min="0" type="range" value="100">
                         <div class="slider-labels">
                             <span>0%</span>
                             <span>100%</span>
-                        </div>
-                    </div>
-                    <div class="settings-group slider-container">
-                        <label>Speed: <span class="slider-value" id="rateValue">1.0</span></label>
-                        <input id="rateSlider" max="2" min="0.5" step="0.1" type="range" value="1">
-                        <div class="slider-labels">
-                            <span>0.5x</span>
-                            <span>2.0x</span>
                         </div>
                     </div>
                 </div>
@@ -711,8 +697,12 @@ class MilitaryAudioPlayer {
         this.basePath = 'audio'; // Base path for audio files
         this.radioStatic = new Audio('audio/radio_noise.mp3'); // Radio static effect
         this.radioStatic.volume = 0.2; // Lower volume for static
+        this.volume = 1;
     }
-
+    setVolume(volume) {
+        this.volume = volume / 100;
+        this.radioStatic.volume = 0.2 * this.volume;
+    }
     /**
      * Set the current voice and preload all audio files for that voice.
      * @param {string} voice - The voice to set (e.g., 'us_artillery', 'german_artillery').
@@ -770,62 +760,60 @@ class MilitaryAudioPlayer {
      * @param {string} type - The type of audio ('digit' or 'phrase').
      * @param {string} key - The key for the audio (e.g., '0', 'startup').
      */
-    async playAudio(type, key) {
-        const cache = type === 'digit' ? this.digitCache : this.phraseCache;
-        const path = `${this.basePath}/${this.voice}/${type}s/${key}.mp3`;
+        async playAudio(type, key) {
+            const cache = type === 'digit' ? this.digitCache : this.phraseCache;
+            const path = `${this.basePath}/${this.voice}/${type}s/${key}.mp3`;
 
-        if (!cache.has(path)) {
-            await this.loadAudio(path, cache);
+            if (!cache.has(path)) {
+                await this.loadAudio(path, cache);
+            }
+
+            const audio = cache.get(path);
+            audio.volume = this.volume;
+
+            // Play radio static
+            this.radioStatic.currentTime = 0;
+            this.radioStatic.play();
+
+            // Play the audio
+            return new Promise((resolve) => {
+                audio.addEventListener('ended', () => {
+                    this.radioStatic.pause();
+                    resolve();
+                }, { once: true });
+                audio.play();
+            });
         }
 
-        const audio = cache.get(path);
-
-        // Play radio static
-        this.radioStatic.currentTime = 0;
-        this.radioStatic.play();
-
-        // Play the audio
-        return new Promise((resolve) => {
-            audio.addEventListener('ended', () => {
-                this.radioStatic.pause();
-                resolve();
-            }, { once: true });
-            audio.play();
-        });
-    }
-
-    /**
-     * Play a sequence of digits followed by "mils".
-     * @param {number} mils - The mils value to play.
-     */
-    async playMils(mils) {
-        const digits = String(mils).split('');
-
-        // Play each digit sequentially
-        for (const digit of digits) {
-            await this.playAudio('digit', digit);
-            await this.delay(100); // Small pause between digits
+        async loadAudio(path, cache) {
+            return new Promise((resolve) => {
+                if (!cache.has(path)) {
+                    const audio = new Audio(path);
+                    audio.addEventListener('canplaythrough', () => {
+                        cache.set(path, audio);
+                        resolve();
+                    }, { once: true });
+                } else {
+                    resolve();
+                }
+            });
+        }
+        async playMils(mils) {
+            const digits = String(mils).split('');
+            for (const digit of digits) {
+                await this.playAudio('digit', digit);
+                await this.delay(100);
+            }
+            await this.playAudio('digit', 'mils');
         }
 
-        // Play "mils"
-        await this.playAudio('digit', 'mils');
-    }
+        async playPhrase(phrase) {
+            await this.playAudio('phrase', phrase);
+        }
 
-    /**
-     * Play a phrase.
-     * @param {string} phrase - The phrase to play (e.g., 'startup', 'faction_selected').
-     */
-    async playPhrase(phrase) {
-        await this.playAudio('phrase', phrase);
-    }
-
-    /**
-     * Delay for a specified number of milliseconds.
-     * @param {number} ms - The delay in milliseconds.
-     */
-    delay(ms) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+        delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
 }
         const audioPlayer = new MilitaryAudioPlayer();
 
@@ -841,18 +829,8 @@ class MilitaryAudioPlayer {
     let maxMeters = 1600;
     const audioSettings = {
         enabled: true,
-        voice: 'UK English Female',
-        volume: 1,
-        rate: 1
+        volume: 1
     };
-
-    const rvVoices = [
-        'UK English Female',
-        'UK English Male',
-        'US English Female',
-        'US English Male',
-        'Australian Female'
-    ];
 
     function initSettings() {
         const savedSettings = localStorage.getItem('audioSettings');
@@ -873,27 +851,16 @@ class MilitaryAudioPlayer {
 
         document.getElementById('audioEnabled').checked = audioSettings.enabled;
         document.getElementById('volumeSlider').value = audioSettings.volume * 100;
-        document.getElementById('rateSlider').value = audioSettings.rate;
+        audioPlayer.setVolume(audioSettings.volume * 100);
         updateSliderValues();
 
-        const voiceSelect = document.getElementById('voiceSelect');
-        rvVoices.forEach(voice => {
-            const option = document.createElement('option');
-            option.value = voice;
-            option.textContent = voice;
-            if (voice === audioSettings.voice) {
-                option.selected = true;
-            }
-            voiceSelect.appendChild(option);
-        });
     }
 
 
     function updateSliderValues() {
-        document.getElementById('volumeValue').textContent =
-            Math.round(document.getElementById('volumeSlider').value);
-        document.getElementById('rateValue').textContent =
-            document.getElementById('rateSlider').value;
+        const volume = document.getElementById('volumeSlider').value;
+        document.getElementById('volumeValue').textContent = volume;
+        audioPlayer.setVolume(volume);
     }
     const standardConversion = (meters) => {
         const A = 1001.465;
@@ -952,9 +919,7 @@ class MilitaryAudioPlayer {
         localStorage.setItem('calculationHistory', JSON.stringify(calculationHistory));
 
         audioSettings.enabled = document.getElementById('audioEnabled').checked;
-        audioSettings.voice = document.getElementById('voiceSelect').value;
         audioSettings.volume = parseFloat(document.getElementById('volumeSlider').value) / 100;
-        audioSettings.rate = parseFloat(document.getElementById('rateSlider').value);
 
         localStorage.setItem('audioSettings', JSON.stringify(audioSettings));
 
@@ -1102,7 +1067,7 @@ class MilitaryAudioPlayer {
         updateFactionUI('us');
         saveSettings();
     });
-    document.getElementById('germany').addEventListener('click', () => {
+    document.getElementById('germanFaction').addEventListener('click', () => {
         currentFaction = 'germany';
         updateFactionUI('germany');
         saveSettings();
@@ -1119,32 +1084,6 @@ class MilitaryAudioPlayer {
         updateFactionUI('british');
         saveSettings();
     });
-    // Speak function with fallback
-    function speak(text) {
-        if (!audioSettings.enabled) return;
-
-        try {
-            // Try ResponsiveVoice first
-            if (typeof responsiveVoice !== 'undefined') {
-                responsiveVoice.speak(text, audioSettings.voice, {
-                    volume: audioSettings.volume,
-                    rate: audioSettings.rate,
-                    pitch: audioSettings.pitch
-                });
-            }
-            // Fallback to Web Speech API
-            else if ('speechSynthesis' in window) {
-                const utterance = new SpeechSynthesisUtterance(text);
-                utterance.volume = audioSettings.volume;
-                utterance.rate = audioSettings.rate;
-                utterance.pitch = audioSettings.pitch;
-
-                speechSynthesis.speak(utterance);
-            }
-        } catch (e) {
-            console.error('Speech error:', e);
-        }
-    }
 
 
 
@@ -1255,10 +1194,6 @@ class MilitaryAudioPlayer {
         document.getElementById('audioEnabled').addEventListener('change', saveSettings);
         document.getElementById('voiceSelect').addEventListener('change', saveSettings);
         document.getElementById('volumeSlider').addEventListener('input', () => {
-            updateSliderValues();
-            saveSettings();
-        });
-        document.getElementById('rateSlider').addEventListener('input', () => {
             updateSliderValues();
             saveSettings();
         });
