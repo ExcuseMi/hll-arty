@@ -863,7 +863,7 @@ class MilitaryAudioPlayer {
     }
 }
         const audioPlayer = new MilitaryAudioPlayer();
-
+        audioPlayer.setUseStaticNoise(false);
         // Set voice based on faction
         function setVoiceForFaction(faction) {
             audioPlayer.setVoice(FACTION_DATA[faction].voice);
