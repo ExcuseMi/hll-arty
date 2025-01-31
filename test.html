@@ -8,40 +8,32 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/annyang/2.6.1/annyang.min.js"></script>
     <script src="https://code.responsivevoice.org/responsivevoice.js?key=7V8JRrYm"></script>
 <style>
-:root {
-    --primary: #4CAF50;
-    --primary-hover: #45a049;
-    --background: #1a1a1a;
-    --surface: #333;
-    --text: #ffffff;
-    --text-secondary: #ccc;
+    :root {
+        --primary: #4CAF50;
+        --primary-hover: #45a049;
+        --accent: #00bcd4;
+        --accent-hover: #0097a7;
+        --background: #2a2a2a;
+        --surface: #333;
+        --text: #ffffff;
+        --text-secondary: #ccc;
+    }
 
-    /* Faction-specific colors */
-    --us-color: #003366; /* US Navy Blue */
-    --us-hover: #002244;
-    --german-color: #808080; /* German Gray */
-    --german-hover: #666666;
-    --russian-color: #8B0000; /* Russian Red */
-    --russian-hover: #660000;
-    --british-color: #006400; /* British Green */
-    --british-hover: #004400;
-}
+    body {
+        font-family: system-ui, -apple-system, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: #1a1a1a;
+        color: var(--text);
+    }
 
-body {
-    font-family: system-ui, -apple-system, sans-serif;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background: var(--background);
-    color: var(--text);
-}
-
-.container {
-    background: var(--surface);
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
+    .container {
+        background: var(--background);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
 
     .status {
         padding: 10px;
@@ -58,123 +50,118 @@ body {
         margin: 15px 0;
     }
 
+    .faction-group {
+        background: var(--surface);
+        padding: 15px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: 2px solid transparent;
+        text-align: center;
+    }
 
-.faction-group {
-    background: var(--surface);
-    padding: 15px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s;
-    border: 2px solid transparent;
-    text-align: center;
-}
+    .faction-group h3 {
+        margin: 0 0 10px 0;
+        font-size: 1.1em;
+    }
 
-.faction-group.active {
-    border-color: var(--accent);
-}
+    .faction-list {
+        font-size: 0.9em;
+        color: var(--text-secondary);
+    }
 
-.faction-group#usFaction.active {
-    border-color: var(--us-color);
-    background-color: var(--us-hover);
-}
+    .faction-group:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-.faction-group#germanFaction.active {
-    border-color: var(--german-color);
-    background-color: var(--german-hover);
-}
+    .faction-group.active {
+        background: var(--accent);
+        border-color: var(--accent-hover);
+    }
 
-.faction-group#russianFaction.active {
-    border-color: var(--russian-color);
-    background-color: var(--russian-hover);
-}
-
-.faction-group#britishFaction.active {
-    border-color: var(--british-color);
-    background-color: var(--british-hover);
-}
-
-
-.conversion {
-    font-size: 28px;
-    font-weight: bold;
-    padding: 25px;
-    margin: 20px 0;
-    background: linear-gradient(145deg, var(--accent), var(--accent-hover));
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
-    text-align: center;
-}
+    /* Conversion Display */
+    .conversion {
+        font-size: 28px;
+        font-weight: bold;
+        padding: 25px;
+        margin: 20px 0;
+        background: linear-gradient(145deg, var(--accent), var(--accent-hover));
+        color: white;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        text-align: center;
+    }
 
     /* Buttons */
-.control-button {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 5px;
-    transition: background 0.3s;
-}
+    .control-button {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        margin: 5px;
+        transition: background 0.3s;
+    }
 
-.control-button:disabled {
-    background: #777;
-    cursor: not-allowed;
-}
+    .control-button:disabled {
+        background: #777;
+        cursor: not-allowed;
+    }
 
-.control-button.active {
-    background: var(--accent-hover);
-}
+    .control-button.active {
+        background: var(--accent-hover);
+    }
 
-#calculateBtn {
-    background: var(--accent);
-    color: white;
-    border: none;
-    padding: 0 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    min-width: 120px;
-}
+    #calculateBtn {
+        background: var(--accent);
+        color: white;
+        border: none;
+        padding: 0 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        min-width: 120px;
+    }
 
-#calculateBtn:hover {
-    background: var(--accent-hover);
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
+    #calculateBtn:hover {
+        background: var(--accent-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
 
-#calculateBtn:active {
-    transform: translateY(0);
-    box-shadow: none;
-}
+    #calculateBtn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
 
-#clearHistoryBtn {
-    background: #ff4444;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    font-size: 0.9em;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
+    #clearHistoryBtn {
+        background: #ff4444;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9em;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
 
-#clearHistoryBtn:hover {
-    background: #cc0000;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
+    #clearHistoryBtn:hover {
+        background: #cc0000;
+        transform: translateY(-1px);
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
 
-#clearHistoryBtn:active {
-    transform: translateY(0);
-    box-shadow: none;
-}
+    #clearHistoryBtn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
 
     /* Input Section */
     .input-section {
@@ -294,20 +281,20 @@ body {
         font-style: italic;
     }
 
-.history-item:hover::after {
-    content: attr(data-timestamp);
-    position: absolute;
-    bottom: 100%;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0, 0, 0, 0.8);
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 0.8em;
-    white-space: nowrap;
-    pointer-events: none;
-}
+    .history-item:hover::after {
+        content: attr(data-timestamp);
+        position: absolute;
+        bottom: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 4px;
+        font-size: 0.8em;
+        white-space: nowrap;
+        pointer-events: none;
+    }
 
     /* Settings Panel */
     .settings-panel {
@@ -1249,7 +1236,6 @@ function getFullDateTime(timestamp) {
                     annyang.start({ autoRestart: true, continuous: true });
                     document.getElementById('status').textContent = 'Status: Listening';
                     updateButtonStates(true);
-                    setTimeout(async () => { await audioPlayer.playPhrase('startup'); }, 500);
 
                 } catch (err) {
                     console.error('Microphone permission denied:', err);
@@ -1267,7 +1253,7 @@ function getFullDateTime(timestamp) {
                 annyang.abort();
                 document.getElementById('status').textContent = 'Status: Not listening';
                 updateButtonStates(false);
-                setTimeout(async () => { await audioPlayer.playPhrase('stop_response'); }, 500);
+                setTimeout(() => { audioPlayer.playPhrase('startup'); }, 500);
 
             });
             document.getElementById('audioEnabled').addEventListener('change', saveSettings);
@@ -1360,4 +1346,3 @@ function getFullDateTime(timestamp) {
 </body>
 
 </html>
-
