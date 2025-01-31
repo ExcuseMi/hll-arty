@@ -986,7 +986,7 @@ class MilitaryAudioPlayer {
         const historyList = document.getElementById('historyList');
         historyList.innerHTML = calculationHistory.map(item => `
             <div class="history-item" data-timestamp="${item.timestamp}">
-                <span class="history-faction">${getFactionIcon(item.faction)} ${item.faction}</span>
+                <span class="history-faction">${getFactionIcon(item.faction.toLowerCase())} ${item.faction}</span>
                 <span class="history-calculation">
                     ${item.meters}m = <span class="history-mils">${item.mils} mils</span>
                 </span>
