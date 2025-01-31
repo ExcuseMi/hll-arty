@@ -646,6 +646,8 @@
                     zero zero works as well.</p>
                 <p>3. Repeat: Say "<strong>repeat mils</strong>" to hear the last calculation.</p>
                 <p>4. Previous: Say "<strong>previous mils</strong>" to hear the second-to-last calculation.</p>
+                <p>5. Stop: Say "<strong>end transmission</strong>".</p>
+
                 <p><strong>Note:</strong> For best results, use Chrome or Edge with a clear microphone</p>
             </div>
         </div>
@@ -1177,7 +1179,10 @@ function getFullDateTime(timestamp) {
         // Voice recognition setup
         if (annyang) {
             const commands = {
-                'repeat': function () {
+                'end transmission': async () => {
+                    await stopListening();
+                },
+                'repeat mils': function () {
                     console.log('Repeat command triggered');
                     if (calculationHistory.length > 0) {
                         const lastMils = calculationHistory[0].mils;
@@ -1187,7 +1192,7 @@ function getFullDateTime(timestamp) {
                         console.log('No history to repeat');
                     }
                 },
-                'previous': function () {
+                'previous mils': function () {
                     console.log('Previous command triggered');
                     if (calculationHistory.length > 1) {
                         const previousMils = calculationHistory[1].mils;
@@ -1236,15 +1241,16 @@ function getFullDateTime(timestamp) {
                     document.getElementById('startBtn').disabled = true;
                 }
             });
-
-            // Stop button handler
-            document.getElementById('stopBtn').addEventListener('click', async () => {
-                // Play the stop response phrase and wait for it to finish
+            async function stopListening() {
                 // Stop annyang after the phrase is fully played
                 annyang.abort();
                 document.getElementById('status').textContent = 'Status: Not listening';
                 updateButtonStates(false);
                 setTimeout(async () => { await audioPlayer.playPhrase('stop_response'); }, 500);
+            }
+            // Stop button handler
+            document.getElementById('stopBtn').addEventListener('click', async () => {
+                await stopListening();
 
             });
             document.getElementById('audioEnabled').addEventListener('change', saveSettings);
