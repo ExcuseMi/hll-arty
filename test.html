@@ -647,21 +647,25 @@
     const FACTION_DATA = {
         'us': {
             icon: '⭐',
-            voice: 'us_artillery'
+            voice: 'us_artillery',
+            name: 'U.S.'
         },
         'german': {
             icon: '⚔️',
-            voice: 'german_artillery'
+            voice: 'german_artillery',
+            name: 'Germany'
         },
         'british': {
             icon: '🇬🇧',
             phrase: 'Artillery standing by, sir',
-            voice: 'british_artillery'
+            voice: 'british_artillery',
+            name: 'U.K.'
         },
         'russian': {
             icon: '🇷🇺',
             phrase: 'Comrade, artillery ready',
-            voice: 'russian_artillery'
+            voice: 'russian_artillery',
+            name: 'Russia'
         }
     };
 class MilitaryAudioPlayer {
@@ -966,13 +970,12 @@ class MilitaryAudioPlayer {
 
     // Update the addToHistory function
     function addToHistory(meters, mils, faction) {
-        const capitalizedFaction = faction.charAt(0).toUpperCase() + faction.slice(1);
         const timestamp = new Date().toISOString();
 
         calculationHistory.unshift({
             meters,
             mils,
-            faction: capitalizedFaction,
+            faction,
             timestamp
         });
 
@@ -986,7 +989,7 @@ class MilitaryAudioPlayer {
         const historyList = document.getElementById('historyList');
         historyList.innerHTML = calculationHistory.map(item => `
             <div class="history-item" data-timestamp="${item.timestamp}">
-                <span class="history-faction">${getFactionIcon(item.faction.toLowerCase())} ${item.faction}</span>
+                <span class="history-faction">${getFactionIcon(item.faction.toLowerCase())} ${getFactionName(item.faction)}</span>
                 <span class="history-calculation">
                     ${item.meters}m = <span class="history-mils">${item.mils} mils</span>
                 </span>
@@ -1001,7 +1004,9 @@ class MilitaryAudioPlayer {
 
     function getFactionIcon(faction) {
         return FACTION_DATA[faction].icon;
-
+    }
+    function getFactionName(faction) {
+        return FACTION_DATA[faction].name;
     }
     async function speakMils(mils) {
         await audioPlayer.playMils(mils);
