@@ -1,3 +1,5 @@
 .env
 /.idea
 /.idea/*
+/hll-artillery-assistant-ui/.vscode
+hll-artillery-assistant-ui/package-lock.json

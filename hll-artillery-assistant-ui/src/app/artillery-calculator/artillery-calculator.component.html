@@ -1,0 +1,82 @@
+<div class="container">
+  <div class="header">
+    <h1>Hell Let Loose Artillery Range Assistant</h1>
+    <a href="https://discord.gg/the-circle" target="_blank" rel="noopener noreferrer">
+      <img alt="The Circle Logo" class="logo" src="assets/images/circle-640.png" />
+    </a>
+  </div>
+
+  <div class="calculator">
+    <div class="control-panel">
+      <button class="control-button" [disabled]="isListening" (click)="startListening()">Start Voice Activation</button>
+      <button class="control-button" [disabled]="!isListening" (click)="stopListening()">Stop Voice Activation</button>
+      <button class="control-button" (click)="enableNotifications()">Enable Notifications</button>
+    </div>
+
+    <div class="status" [innerHTML]="status"></div>
+
+    <div class="faction-selector">
+      <div class="faction-group" [class.active]="currentFaction === 'us'" (click)="changeFaction('us')">
+        <h3>⭐ US Forces</h3>
+        <div class="faction-list">155MM HOWITZER M114</div>
+      </div>
+      <div class="faction-group" [class.active]="currentFaction === 'german'" (click)="changeFaction('german')">
+        <h3>⚔️ German Forces</h3>
+        <div class="faction-list">150MM HOWITZER SFH 18</div>
+      </div>
+      <div class="faction-group" [class.active]="currentFaction === 'russian'" (click)="changeFaction('russian')">
+        <h3>🇷🇺 Russian Forces</h3>
+        <div class="faction-list">M122MM HOWITZER 1938 (M-30)</div>
+      </div>
+      <div class="faction-group" [class.active]="currentFaction === 'british'" (click)="changeFaction('british')">
+        <h3>🇬🇧 British Forces</h3>
+        <div class="faction-list">QF 25-POUNDER</div>
+      </div>
+    </div>
+
+    <div class="input-section">
+      <h3>Enter Distance</h3>
+      <div class="input-group">
+        <input
+          type="number"
+          [(ngModel)]="metersInput"
+          min="100"
+          max="1600"
+          placeholder="Enter distance in meters"
+          (keydown.enter)="calculateMils(metersInput)"
+        />
+        <button class="control-button" (click)="calculateMils(metersInput)">Calculate</button>
+      </div>
+    </div>
+
+    <div class="conversion">{{ conversionResult || 'Waiting for input...' }}</div>
+
+    <div class="history">
+      <div class="history-header">
+        <h3>Calculation History</h3>
+        <button class="control-button" (click)="clearHistory()">Clear History</button>
+      </div>
+      <div class="history-content">
+        <div class="history-item" *ngFor="let item of calculationHistory" [attr.data-timestamp]="item.timestamp">
+          <span class="history-faction">{{ getFactionIcon(item.faction) }} {{ getFactionName(item.faction) }}</span>
+          <span class="history-calculation">
+            {{ item.meters }}m = <span class="history-mils">{{ item.mils }} mils</span>
+          </span>
+          <span class="history-timestamp">{{ getRelativeTime(item.timestamp) }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!--<app-audio-settings></app-audio-settings>
+  <app-voice-info></app-voice-info>-->
+
+  <div class="disclaimer">
+    <p>
+      <strong>Disclaimer:</strong> This tool is a fan-made project and is not affiliated with, endorsed by, or
+      associated with Black Matter, Team17, or the <em>Hell Let Loose</em> franchise. All trademarks, logos,
+      and images are the property of their respective owners. This tool is provided for educational and
+      entertainment purposes only.
+    </p>
+  </div>
+</div>
